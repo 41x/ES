@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.ObservableList;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,9 +9,12 @@ import java.util.ArrayList;
  * Created by alxAsus on 28.02.2016.
  */
 public class DomainValues implements Serializable{
-    private ArrayList<DomainValue> list;
+    private ObservableList<DomainValue> list;
     private Domain domain;
 
+    public DomainValues(ObservableList<DomainValue> list) {
+        this.list = list;
+    }
 
     private boolean add(String dv){
         if(contains(dv)) {
@@ -42,6 +47,10 @@ public class DomainValues implements Serializable{
         while (i<list.size() && !list.get(i).getValue().equalsIgnoreCase(val)) i++;
         if(i==list.size()) return null;
         return list.get(i);
+    }
+
+    public ObservableList<DomainValue> getList() {
+        return list;
     }
 
     public void setDomain(Domain domain) {

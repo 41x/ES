@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -19,6 +20,8 @@ import java.io.*;
 
 public class Controller {
     final FileChooser fileChooser = new FileChooser();
+    public TableView<Domain> domainTableView;
+    public TableView<DomainValue> domainValuesTableView;
 
     public void OpenKB(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(Main.getStage());
@@ -43,11 +46,23 @@ public class Controller {
 
     }
 
+    public TableView<DomainValue> getDomainValuesTableView() {
+        return domainValuesTableView;
+    }
+
+    public TableView<Domain> getDomainTableView() {
+        return domainTableView;
+    }
+
     public void Close(ActionEvent actionEvent) {
         Main.getStage().close();
     }
 
     public void onAddDomain(ActionEvent actionEvent) {
+        AddDomainWindowFactory();
+    }
+
+    public void onEditDomain(ActionEvent actionEvent) {
 //        todo
         Stage stage=new Stage();
         Parent root;
@@ -60,36 +75,59 @@ public class Controller {
             return;
         }
         addDomainController c = loader.getController();
-        TableColumn numberCol = new TableColumn("#");
+
+        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
-        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<DomainValue, Integer>, ObservableValue<Integer>>() {
-            @Override public ObservableValue<Integer> call(TableColumn.CellDataFeatures<DomainValue, Integer> p) {
-                return new ReadOnlyObjectWrapper<>(c.getTableView().getItems().indexOf(p.getValue()) + 1);
-            }
-        });
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
+                Integer.toString(c.getTableView().getItems().indexOf(p.getValue()) + 1)));
         numberCol.setSortable(false);
 
         TableColumn<DomainValue, String> value= new TableColumn<>("Value");
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
-
         c.tableView.getColumns().addAll(numberCol,value);
 
         final ObservableList<DomainValue> data = FXCollections.observableArrayList();
-
         c.setList(data);
         c.tableView.setItems(data);
-
-
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
-    }
 
-    public void onEditDomain(ActionEvent actionEvent) {
-//        todo
+
     }
 
     public void onDeleteDomain(ActionEvent actionEvent) {
 //        todo
+    }
+
+    private void AddDomainWindowFactory(){
+        Stage stage=new Stage();
+        Parent root;
+        FXMLLoader loader;
+        try {
+            loader = new FXMLLoader(getClass().getResource("addDomain.fxml"));
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        addDomainController c = loader.getController();
+
+        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
+                Integer.toString(c.getTableView().getItems().indexOf(p.getValue()) + 1)));
+        numberCol.setSortable(false);
+
+        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
+        value.setCellValueFactory(new PropertyValueFactory<>("value"));
+        c.tableView.getColumns().addAll(numberCol,value);
+
+        final ObservableList<DomainValue> data = FXCollections.observableArrayList();
+        c.setList(data);
+        c.tableView.setItems(data);
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

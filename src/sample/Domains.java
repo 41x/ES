@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,11 +10,11 @@ import java.util.ArrayList;
  * Created by alxAsus on 28.02.2016.
  */
 public class Domains implements Serializable{
-    private ArrayList<Domain> list;
+    private ObservableList<Domain> list;
     private KB kb;
 
     public Domains() {
-        this.list = new ArrayList<>();
+        this.list = FXCollections.observableArrayList();
     }
 
     public boolean add(String name, DomainValues values){
@@ -37,6 +40,10 @@ public class Domains implements Serializable{
         int i=0;
         while (i<list.size() && !list.get(i).getName().equals(domname)) i++;
         return i < list.size();
+    }
+
+    public ObservableList<Domain> getList() {
+        return list;
     }
 
     public void setKb(KB kb) {

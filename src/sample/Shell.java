@@ -33,7 +33,8 @@ public class Shell {
             System.out.println(String.format("Deserialized %s",path));
             return kb;
         }catch(Exception i) {
-            i.printStackTrace();
+            System.out.println(i.getMessage());
+//            i.printStackTrace();
             return null;
         }
     }
@@ -52,7 +53,8 @@ public class Shell {
             System.out.println(String.format("Serialized data in %s",path));
         }catch(Exception i) {
             System.out.println(String.format("Could not serialize %s",path));
-            i.printStackTrace();
+//            i.printStackTrace();
+            System.out.println(i.getMessage());
         }
     }
 

@@ -17,7 +17,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextField>
-      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="tableView" onMouseClicked="#onClick" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
@@ -32,7 +32,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </Button>
-      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onEdit" prefWidth="1000.0" text="Edit">
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onReplace" prefWidth="1000.0" text="Replace">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
@@ -52,7 +52,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Cancel" HBox.hgrow="ALWAYS">
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
