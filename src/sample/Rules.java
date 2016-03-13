@@ -52,6 +52,14 @@ public class Rules implements Serializable, Iterable<Rule>{
         return list.iterator();
     }
 
+    public void toSerializable() {
+//        todo
+    }
+
+    public void toWorkingState() {
+//        todo
+    }
+
 //    @Override
 //    public boolean hasNext() {
 //        return count < list.size();

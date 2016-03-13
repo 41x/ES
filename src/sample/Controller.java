@@ -17,11 +17,18 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toCollection;
 
 public class Controller {
     final FileChooser fileChooser = new FileChooser();
     public TableView<Domain> domainTableView;
     public TableView<DomainValue> domainValuesTableView;
+
+    private addDomainController domainController;
+    private String domainOperation;
 
     public void OpenKB(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(Main.getStage());
@@ -43,7 +50,88 @@ public class Controller {
         if (file != null) {
             Main.getShell().ser(file.getPath());
         }
+    }
 
+
+    public void Close(ActionEvent actionEvent) {
+        Main.getStage().close();
+    }
+
+    public void onAddDomain(ActionEvent actionEvent) {
+        setDomainOperation("add");
+        Stage domainStage = domainStageFactory();
+        final ObservableList<DomainValue> data = FXCollections.observableArrayList();
+        getDomainController().setList(data);
+        getDomainController().getTableView().setItems(data);
+        if (domainStage != null)
+            domainStage.show();
+    }
+
+    public void onEditDomain(ActionEvent actionEvent) {
+        if (getDomainTableView().getSelectionModel().isEmpty()) return;
+        setDomainOperation("edit");
+        Stage domainStage = domainStageFactory();
+        Domain selectedDomain = getDomainTableView().getSelectionModel().getSelectedItem();
+        getDomainController().nameTextField.setText(selectedDomain.getName());
+
+        ObservableList<DomainValue> data = selectedDomain.getValues().getListCopy();
+        getDomainController().setList(data);
+        getDomainController().getTableView().setItems(data);
+        if (domainStage != null)
+            domainStage.show();
+    }
+
+
+    public void onDeleteDomain(ActionEvent actionEvent) {
+        if (getDomainTableView().getSelectionModel().isEmpty()) return;
+        Domain selDomain = getDomainTableView().getSelectionModel().getSelectedItem();
+        Main.getShell().getKnowledgeBase().getDomains().remove(selDomain);
+//        getDomainValuesTableView().getItems().clear();
+    }
+
+    private Stage domainStageFactory() {
+        Stage stage=new Stage();
+        Parent root;
+        FXMLLoader loader;
+        try {
+            loader = new FXMLLoader(getClass().getResource("addDomain.fxml"));
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        setDomainController(loader.getController());
+
+        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
+                Integer.toString(getDomainController().getTableView().getItems().indexOf(p.getValue()) + 1)));
+        numberCol.setSortable(false);
+
+        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
+        value.setCellValueFactory(new PropertyValueFactory<>("value"));
+        getDomainController().getTableView().getColumns().addAll(numberCol, value);
+
+
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return stage;
+    }
+
+//    public Stage getDomainStage() {
+//        return domainStage==null?domainStageFactory():domainStage;
+//    }
+
+    public addDomainController getDomainController() {
+        return domainController;
+    }
+
+    public String getDomainOperation() {
+        return domainOperation;
+    }
+
+    public void setDomainOperation(String domainOperation) {
+        this.domainOperation = domainOperation;
     }
 
     public TableView<DomainValue> getDomainValuesTableView() {
@@ -54,80 +142,8 @@ public class Controller {
         return domainTableView;
     }
 
-    public void Close(ActionEvent actionEvent) {
-        Main.getStage().close();
+    public void setDomainController(addDomainController domainController) {
+        this.domainController = domainController;
     }
 
-    public void onAddDomain(ActionEvent actionEvent) {
-        AddDomainWindowFactory();
-    }
-
-    public void onEditDomain(ActionEvent actionEvent) {
-//        todo
-        Stage stage=new Stage();
-        Parent root;
-        FXMLLoader loader;
-        try {
-            loader = new FXMLLoader(getClass().getResource("addDomain.fxml"));
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        addDomainController c = loader.getController();
-
-        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
-        numberCol.setPrefWidth(50);
-        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
-                Integer.toString(c.getTableView().getItems().indexOf(p.getValue()) + 1)));
-        numberCol.setSortable(false);
-
-        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
-        value.setCellValueFactory(new PropertyValueFactory<>("value"));
-        c.tableView.getColumns().addAll(numberCol,value);
-
-        final ObservableList<DomainValue> data = FXCollections.observableArrayList();
-        c.setList(data);
-        c.tableView.setItems(data);
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
-
-
-    }
-
-    public void onDeleteDomain(ActionEvent actionEvent) {
-//        todo
-    }
-
-    private void AddDomainWindowFactory(){
-        Stage stage=new Stage();
-        Parent root;
-        FXMLLoader loader;
-        try {
-            loader = new FXMLLoader(getClass().getResource("addDomain.fxml"));
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        addDomainController c = loader.getController();
-
-        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
-        numberCol.setPrefWidth(50);
-        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
-                Integer.toString(c.getTableView().getItems().indexOf(p.getValue()) + 1)));
-        numberCol.setSortable(false);
-
-        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
-        value.setCellValueFactory(new PropertyValueFactory<>("value"));
-        c.tableView.getColumns().addAll(numberCol,value);
-
-        final ObservableList<DomainValue> data = FXCollections.observableArrayList();
-        c.setList(data);
-        c.tableView.setItems(data);
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
-    }
 }

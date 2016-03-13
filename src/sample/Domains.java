@@ -10,8 +10,9 @@ import java.util.ArrayList;
  * Created by alxAsus on 28.02.2016.
  */
 public class Domains implements Serializable{
-    private ObservableList<Domain> list;
+    private transient ObservableList<Domain> list;
     private KB kb;
+    private ArrayList<Domain> serList;
 
     public Domains() {
         this.list = FXCollections.observableArrayList();
@@ -30,7 +31,7 @@ public class Domains implements Serializable{
     }
 
     public boolean remove(Domain d){
-        if(kb.getVariables().useDomain(d))
+        if (!kb.getVariables().useDomain(d))
             return list.remove(d);
         System.out.println("This domain is used in variables");
         return false;
@@ -48,5 +49,28 @@ public class Domains implements Serializable{
 
     public void setKb(KB kb) {
         this.kb = kb;
+    }
+
+    public void toSerializable() {
+        getList().forEach(Domain::toSerializable);
+        serList = new ArrayList<>(list);
+    }
+
+    public void toWorkingState() {
+        setList(FXCollections.observableArrayList(getSerList()));
+        getList().forEach(Domain::toWorkingState);
+        setSerList(null);
+    }
+
+    public void setList(ObservableList<Domain> list) {
+        this.list = list;
+    }
+
+    public ArrayList<Domain> getSerList() {
+        return serList;
+    }
+
+    public void setSerList(ArrayList<Domain> serList) {
+        this.serList = serList;
     }
 }

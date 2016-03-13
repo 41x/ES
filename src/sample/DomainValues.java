@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.Serializable;
@@ -9,10 +10,27 @@ import java.util.ArrayList;
  * Created by alxAsus on 28.02.2016.
  */
 public class DomainValues implements Serializable{
-    private ObservableList<DomainValue> list;
+    private transient ObservableList<DomainValue> list;
     private Domain domain;
+    private ArrayList<DomainValue> serList;
 
     public DomainValues(ObservableList<DomainValue> list) {
+        this.list = list;
+    }
+
+    public ObservableList<DomainValue> getListCopy() {
+        ObservableList<DomainValue> newlist = FXCollections.observableArrayList();
+        list.forEach(x -> {
+            try {
+                newlist.add(x.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        });
+        return newlist;
+    }
+
+    public void setList(ObservableList<DomainValue> list) {
         this.list = list;
     }
 
@@ -55,5 +73,24 @@ public class DomainValues implements Serializable{
 
     public void setDomain(Domain domain) {
         this.domain = domain;
+    }
+
+    public void toSerializable() {
+        getList().forEach(DomainValue::toSerializable);
+        setSerList(new ArrayList<>(getList()));
+    }
+
+    public void toWorkingState() {
+        setList(FXCollections.observableArrayList(getSerList()));
+        getList().forEach(DomainValue::toWorkingState);
+        setSerList(null);
+    }
+
+    public ArrayList<DomainValue> getSerList() {
+        return serList;
+    }
+
+    public void setSerList(ArrayList<DomainValue> serList) {
+        this.serList = serList;
     }
 }

@@ -56,6 +56,10 @@ public class Rule implements Serializable, Comparable<Rule> {
         return premises.count() - o.getPremises().count();
     }
 
+    public void toSerializable() {
+//        todo
+    }
+
 //    @Override
 //    public int compare(Rule o1, Rule o2) {
 //        return o1.getPremises().count() - o2.getPremises().count();

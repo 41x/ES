@@ -28,13 +28,14 @@ public class Shell {
             FileInputStream fileIn = new FileInputStream(path);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             kb = (KB) in.readObject();
+            kb.toWorkingState();
             in.close();
             fileIn.close();
             System.out.println(String.format("Deserialized %s",path));
             return kb;
         }catch(Exception i) {
             System.out.println(i.getMessage());
-//            i.printStackTrace();
+            i.printStackTrace();
             return null;
         }
     }
@@ -47,7 +48,7 @@ public class Shell {
         {
             FileOutputStream fileOut = new FileOutputStream(path);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(knowledgeBase);
+            out.writeObject(knowledgeBase.toSerializableState());
             out.close();
             fileOut.close();
             System.out.println(String.format("Serialized data in %s",path));

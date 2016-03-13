@@ -38,21 +38,32 @@ public class addDomainController {
     }
 
     public void onDelete(ActionEvent actionEvent) {
-        if (tableView.getSelectionModel().isEmpty()) return;
+        if (getTableView().getSelectionModel().isEmpty() || getTableView().getItems().size() == 1) return;
         list.remove(tableView.getSelectionModel().getSelectedItem());
     }
 
     public void onOK(ActionEvent actionEvent) {
-        if (nameTextField.getText().equalsIgnoreCase("")
-                || tableView.getItems().size()==0) return;
-        Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(),new DomainValues(list));
-        Domains ds=Main.getShell().getKnowledgeBase().getDomains();
-        Domain d=ds.getList().get(0);
+        if (Main.getController().getDomainOperation().equals("add")) {
+            if (nameTextField.getText().equalsIgnoreCase("")
+                    || tableView.getItems().size() == 0) return;
+            Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(), new DomainValues(list));
+            nameTextField.clear();
+            valueTextField.clear();
+            list = FXCollections.observableArrayList();
+            tableView.setItems(list);
 
-        nameTextField.clear();
-        valueTextField.clear();
-        list = FXCollections.observableArrayList();
-        tableView.setItems(list);
+        } else if (Main.getController().getDomainOperation().equals("edit")) {
+            Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();
+            Domains ds = Main.getShell().getKnowledgeBase().getDomains();
+            if (nameTextField.getText().equalsIgnoreCase("")
+                    || (!nameTextField.getText().equalsIgnoreCase(selectedDomain.getName())
+                    && ds.getList().stream().filter(d -> d.getName()
+                    .equalsIgnoreCase(nameTextField.getText())).count() > 0)) return;
+            selectedDomain.setName(nameTextField.getText());
+            selectedDomain.getValues().setList(list);
+            Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
+            ((Stage) valueTextField.getScene().getWindow()).close();
+        }
     }
 
     public void onCancel(ActionEvent actionEvent) {
@@ -71,7 +82,7 @@ public class addDomainController {
         return true;
     }
 
-    public TableView getTableView() {
+    public TableView<DomainValue> getTableView() {
         return tableView;
     }
 

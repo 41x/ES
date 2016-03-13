@@ -37,4 +37,8 @@ public class Variable implements Serializable {
     public String getQuestion() {
         return question;
     }
+
+    public void toSerializable() {
+//        todo
+    }
 }

@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
@@ -20,7 +21,7 @@ public class Main extends Application {
 
     private static Shell shell;
     private static Stage stage;
-    private Controller controller;
+    private static Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -124,6 +125,7 @@ public class Main extends Application {
         return null;
     }
 
-
-
+    public static Controller getController() {
+        return controller;
+    }
 }

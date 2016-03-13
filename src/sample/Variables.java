@@ -53,4 +53,16 @@ public class Variables implements Serializable{
     public void setKb(KB kb) {
         this.kb = kb;
     }
+
+    public ArrayList<Variable> getList() {
+        return list;
+    }
+
+    public void toSerializable() {
+//        todo
+    }
+
+    public void toWorkingState() {
+//        todo
+    }
 }
