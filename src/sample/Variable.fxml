@@ -13,75 +13,75 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="sample.VariableController">
-    <children>
-        <TextField fx:id="nameTextField" promptText="Name">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </TextField>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type">
-            <VBox.margin>
-                <Insets left="5.0"/>
-            </VBox.margin>
-        </Text>
-        <HBox prefWidth="200.0" stylesheets="@style.css">
-            <children>
-                <RadioButton mnemonicParsing="false" text="Inferable">
-                    <HBox.margin>
-                        <Insets left="5.0" right="5.0"/>
-                    </HBox.margin>
-                </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Askable">
-                    <HBox.margin>
-                        <Insets right="5.0"/>
-                    </HBox.margin>
-                </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Infer-askable"/>
-            </children>
-        </HBox>
-        <TableView fx:id="tableView" onMouseClicked="#onClick" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </TableView>
-        <TextField fx:id="valueTextField" promptText="Value">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </TextField>
-        <Button minWidth="100.0" mnemonicParsing="false" onAction="#onAdd" prefWidth="1000.0" text="Add">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </Button>
-        <Button minWidth="100.0" mnemonicParsing="false" onAction="#onReplace" prefWidth="1000.0" text="Replace">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </Button>
-        <Button minWidth="100.0" mnemonicParsing="false" onAction="#onDelete" prefWidth="1000.0" text="Delete">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-        </Button>
-        <HBox alignment="TOP_CENTER" prefWidth="200.0">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-            <children>
-                <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefWidth="1000.0" text="OK"
-                        HBox.hgrow="ALWAYS">
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                    </HBox.margin>
-                </Button>
-                <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close"
-                        HBox.hgrow="ALWAYS">
-                    <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                    </HBox.margin>
-                </Button>
-            </children>
-        </HBox>
-    </children>
+   <children>
+      <TextField fx:id="nameTextField" promptText="Name">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </TextField>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type">
+         <VBox.margin>
+            <Insets left="5.0"/>
+         </VBox.margin>
+      </Text>
+      <HBox prefWidth="200.0" stylesheets="@style.css">
+         <children>
+            <RadioButton mnemonicParsing="false" text="Inferable">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0"/>
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" text="Askable">
+               <HBox.margin>
+                  <Insets right="5.0"/>
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" text="Infer-askable"/>
+         </children>
+      </HBox>
+      <TableView fx:id="tableView" onMouseClicked="#onClick" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </TableView>
+      <TextField fx:id="valueTextField" promptText="Value">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </TextField>
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onAdd" prefWidth="1000.0" text="Add">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </Button>
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onReplace" prefWidth="1000.0" text="Replace">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </Button>
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onDelete" prefWidth="1000.0" text="Delete">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+      </Button>
+      <HBox alignment="TOP_CENTER" prefWidth="200.0">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+         <children>
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefWidth="1000.0" text="OK"
+                    HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+               </HBox.margin>
+            </Button>
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close"
+                    HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
 </VBox>

@@ -62,6 +62,7 @@ public class DomainController {
             selectedDomain.setName(nameTextField.getText());
             selectedDomain.getValues().setList(list);
             Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
+            ((Stage) valueTextField.getScene().getWindow()).close();
         }
     }
 

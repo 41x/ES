@@ -27,7 +27,7 @@ public class Controller {
     public TableView<Domain> domainTableView;
     public TableView<DomainValue> domainValuesTableView;
 
-    private addDomainController domainController;
+    private DomainController domainController;
     private String domainOperation;
 
     public void OpenKB(ActionEvent actionEvent) {
@@ -94,7 +94,7 @@ public class Controller {
         Parent root;
         FXMLLoader loader;
         try {
-            loader = new FXMLLoader(getClass().getResource("addDomain.fxml"));
+            loader = new FXMLLoader(getClass().getResource("Domain.fxml"));
             root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class Controller {
 //        return domainStage==null?domainStageFactory():domainStage;
 //    }
 
-    public addDomainController getDomainController() {
+    public DomainController getDomainController() {
         return domainController;
     }
 
@@ -142,7 +142,7 @@ public class Controller {
         return domainTableView;
     }
 
-    public void setDomainController(addDomainController domainController) {
+    public void setDomainController(DomainController domainController) {
         this.domainController = domainController;
     }
 
