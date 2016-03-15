@@ -90,29 +90,29 @@
                            <children>
                               <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                                  <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" prefWidth="1000.0" text="Add">
+                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddVariable" prefWidth="1000.0" text="Add">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Edit">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditVariable" prefWidth="1000.0" text="Edit">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
                                     <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Delete">
                                        <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+                                          <Insets left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <TextArea fx:id="varDomainValueTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                    <TableView fx:id="varTabDomValTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
-                                    </TextArea>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Close">
+                                    </TableView>
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
                                        <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" />
                                        </VBox.margin>
                                     </Button>
                                  </children>

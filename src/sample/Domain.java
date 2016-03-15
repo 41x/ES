@@ -62,4 +62,9 @@ public class Domain implements Serializable{
     public void setSerName(String serName) {
         this.serName = serName;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -4,95 +4,115 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class VariableController {
     public TextField nameTextField;
-    public TableView<DomainValue> tableView;
-    public TextField valueTextField;
-    private ObservableList<DomainValue> list;
+    public RadioButton radioInfer;
+    public RadioButton radioRequest;
+    public RadioButton radioInfReq;
+    public TextArea requestTextField;
+    public ComboBox<Domain> domainCombo;
+    public TableView<DomainValue> addVarDomainValTableView;
+    private Background bg;
 
 
     public void onAdd(ActionEvent actionEvent) {
-        if (!validate()) return;
-        valueTextField.requestFocus();
-        // dvs are unique
-        if (list.stream().filter(dv -> dv.getValue().equals(valueTextField.getText())).count() > 0) {
-            return;
-        }
-        list.add(new DomainValue(valueTextField.getText()));
-    }
-
-    public void onReplace(ActionEvent actionEvent) {
-        valueTextField.requestFocus();
-        if (tableView.getSelectionModel().isEmpty()) return;
-        DomainValue selitem = tableView.getSelectionModel().getSelectedItem();
-        if (valueTextField.getText().equalsIgnoreCase("")
-                || valueTextField.getText().equalsIgnoreCase(selitem.getValue())
-                || list.stream().filter(
-                dv -> dv.getValue().equalsIgnoreCase(valueTextField.getText())).count() > 0)
-            return;
-        selitem.setValue(valueTextField.getText());
-    }
-
-    public void onDelete(ActionEvent actionEvent) {
-        if (getTableView().getSelectionModel().isEmpty() || getTableView().getItems().size() == 1) return;
-        list.remove(tableView.getSelectionModel().getSelectedItem());
+        Main.getController().onAddDomain();
     }
 
     public void onOK(ActionEvent actionEvent) {
-        if (Main.getController().getDomainOperation().equals("add")) {
-            if (nameTextField.getText().equalsIgnoreCase("")
-                    || tableView.getItems().size() == 0) return;
-            Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(), new DomainValues(list));
-            nameTextField.clear();
-            valueTextField.clear();
-            list = FXCollections.observableArrayList();
-            tableView.setItems(list);
+//        todo
+        if(!validate()) return;
 
-        } else if (Main.getController().getDomainOperation().equals("edit")) {
-            Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();
-            Domains ds = Main.getShell().getKnowledgeBase().getDomains();
-            if (nameTextField.getText().equalsIgnoreCase("")
-                    || (!nameTextField.getText().equalsIgnoreCase(selectedDomain.getName())
-                    && ds.getList().stream().filter(d -> d.getName()
-                    .equalsIgnoreCase(nameTextField.getText())).count() > 0)) return;
-            selectedDomain.setName(nameTextField.getText());
-            selectedDomain.getValues().setList(list);
-            Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
+        if(Main.getController().getVariableOperation().equals("add")){
+
+        }else if(Main.getController().getVariableOperation().equals("edit")){
+
+            ((Stage)getDomainCombo().getScene().getWindow()).close();
         }
     }
 
     public void onCancel(ActionEvent actionEvent) {
-        ((Stage) valueTextField.getScene().getWindow()).close();
+        ((Stage)getDomainCombo().getScene().getWindow()).close();
+    }
+
+
+    public void onEdit(ActionEvent actionEvent) {
+        if(getDomainCombo().getSelectionModel().isEmpty()) return;
+        Main.getController().getDomainTableView().getSelectionModel().select(
+                getDomainCombo().getSelectionModel().getSelectedItem());
+        Main.getController().onEditDomain();
+    }
+
+    public TableView<DomainValue> getAddVarDomainValTableView() {
+        return addVarDomainValTableView;
+    }
+
+    public void onDomainSelected(Event event) {
+        if(getDomainCombo().getSelectionModel().isEmpty()) return;
+        Main.getController().getVariableController().getAddVarDomainValTableView().setItems(
+                getDomainCombo().getSelectionModel().getSelectedItem().getValues().getList());
     }
 
     private boolean validate() {
-        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
-            nameTextField.requestFocus();
+        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+            getNameTextField().requestFocus();
             return false;
         }
-        if (!valueTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
-            valueTextField.requestFocus();
+        if (getRequestTextField().getText().trim().equals("")) {
+            getRequestTextField().requestFocus();
             return false;
         }
+
+//        todo
+//        if(getDomainCombo().getSelectionModel().isEmpty()) {
+//            bg=getDomainCombo().getBackground();
+//            getDomainCombo().setBackground(
+//                    new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+//            return false;
+//        }
+//
+//        getDomainCombo().onMouseClickedProperty().addListener((a,b,c)->{
+//            getDomainCombo().setBackground(bg);
+//        });
+
         return true;
     }
 
-    public TableView<DomainValue> getTableView() {
-        return tableView;
+
+    public ComboBox<Domain> getDomainCombo() {
+        return domainCombo;
     }
 
-    public void setList(ObservableList<DomainValue> list) {
-        this.list = list;
+    public RadioButton getRadioInfer() {
+        return radioInfer;
     }
 
+    public RadioButton getRadioRequest() {
+        return radioRequest;
+    }
 
-    public void onClick(Event event) {
-        if (tableView.getSelectionModel().isEmpty()) return;
-        valueTextField.setText(tableView.getSelectionModel().getSelectedItem().getValue());
-        valueTextField.requestFocus();
+    public RadioButton getRadioInfReq() {
+        return radioInfReq;
+    }
+
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
+    public TextArea getRequestTextField() {
+        return requestTextField;
+    }
+
+    public void removeBackground(ActionEvent actionEvent) {
+        getDomainCombo().setBackground(Background.EMPTY);
     }
 }

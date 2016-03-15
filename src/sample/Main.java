@@ -61,15 +61,59 @@ public class Main extends Application {
         if (kbPath!=null)
             kbisset=shell.setKnowledgeBase(kbPath);
 
-
         stage.setTitle(shell.getKnowledgeBase().getName()+" "+ (kbisset?kbPath:""));
+        fillDomainsTab();
+        fillVariablesTab();
+
         stage.setScene(new Scene(root));
         stage.show();
 
-        fillDomainsTab();
 
     }
 
+
+    private void fillVariablesTab(){
+
+        TableColumn<Variable,Integer> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
+                controller.getVarTableView().getItems().indexOf(p.getValue()) + 1));
+        numberCol.setSortable(false);
+
+        TableColumn<Variable, String> value= new TableColumn<>("Name");
+        value.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<Variable, VarType> vartype= new TableColumn<>("Type");
+        vartype.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+
+
+        controller.getVarTableView().getColumns().addAll(numberCol,value,vartype);
+
+        controller.getVarTableView().setItems(getShell().getKnowledgeBase().getVariables().getList());
+//todo
+//        TableColumn<DomainValue,Integer> numberCol2 = new TableColumn<>("#");
+//        numberCol2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
+//                controller.getDomainValuesTableView().getItems().indexOf(p.getValue()) + 1));
+//        numberCol2.setSortable(false);
+//        numberCol2.setPrefWidth(50);
+//
+//        TableColumn<DomainValue, String> value2= new TableColumn<>("Value");
+//        value2.setCellValueFactory(new PropertyValueFactory<>("value"));
+//
+//        controller.getDomainValuesTableView().getColumns().addAll(numberCol2,value2);
+//
+//        controller.getDomainTableView().getSelectionModel().selectedItemProperty()
+//                .addListener((obs, oldSelection, newSelection) -> {
+//            if (newSelection != null) {
+//                controller.getDomainValuesTableView().setItems(newSelection.getValues().getList());
+//            }
+//        });
+//
+//        if(controller.domainTableView.getItems().size()>0)
+//            controller.domainTableView.getSelectionModel().select(0);
+
+    }
 
     private void fillDomainsTab(){
 

@@ -26,15 +26,23 @@ public class Controller {
     final FileChooser fileChooser = new FileChooser();
     public TableView<Domain> domainTableView;
     public TableView<DomainValue> domainValuesTableView;
+    public TableView<Variable> varTableView;
+    public TableView varTabDomValTableView;
 
     private DomainController domainController;
     private String domainOperation;
+
+    private VariableController variableController;
+    private String variableOperation;
 
     public void OpenKB(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(Main.getStage());
         if (file == null) return;
         if(!Main.getShell().setKnowledgeBase(file.getPath())) return;
         Main.getStage().setTitle(Main.getShell().getKnowledgeBase().getName()+" "+ file.getPath());
+
+        getDomainTableView().setItems(Main.getShell().getKnowledgeBase().getDomains().getList());
+//todo on openin new kb resetitems also to vars and rules
 
         try{
             PrintWriter writer = new PrintWriter("lastKB", "UTF-8");
@@ -57,7 +65,7 @@ public class Controller {
         Main.getStage().close();
     }
 
-    public void onAddDomain(ActionEvent actionEvent) {
+    public void onAddDomain() {
         setDomainOperation("add");
         Stage domainStage = domainStageFactory();
         final ObservableList<DomainValue> data = FXCollections.observableArrayList();
@@ -67,7 +75,7 @@ public class Controller {
             domainStage.show();
     }
 
-    public void onEditDomain(ActionEvent actionEvent) {
+    public void onEditDomain() {
         if (getDomainTableView().getSelectionModel().isEmpty()) return;
         setDomainOperation("edit");
         Stage domainStage = domainStageFactory();
@@ -87,6 +95,56 @@ public class Controller {
         Domain selDomain = getDomainTableView().getSelectionModel().getSelectedItem();
         Main.getShell().getKnowledgeBase().getDomains().remove(selDomain);
 //        getDomainValuesTableView().getItems().clear();
+    }
+
+
+    public void onAddVariable(ActionEvent actionEvent) {
+        setVariableOperation("add");
+        Stage varStage = variableStageFactory();
+
+        if (varStage != null)
+            varStage.show();
+    }
+
+
+
+    public void onEditVariable(ActionEvent actionEvent) {
+//        todo
+    }
+
+
+    private Stage variableStageFactory() {
+        Stage stage=new Stage();
+        Parent root;
+        FXMLLoader loader;
+        try {
+            loader = new FXMLLoader(getClass().getResource("Variable.fxml"));
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        setVariableController(loader.getController());
+
+        TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
+                Integer.toString(getVariableController().getAddVarDomainValTableView().getItems()
+                        .indexOf(p.getValue()) + 1)));
+        numberCol.setSortable(false);
+
+        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
+        value.setCellValueFactory(new PropertyValueFactory<>("value"));
+        getVariableController().getAddVarDomainValTableView().getColumns().addAll(numberCol, value);
+
+        getVariableController().getDomainCombo()
+                .setItems(Main.getShell().getKnowledgeBase().getDomains().getList());
+
+        getVariableController().getRadioRequest().fire();
+
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return stage;
     }
 
     private Stage domainStageFactory() {
@@ -118,9 +176,6 @@ public class Controller {
         return stage;
     }
 
-//    public Stage getDomainStage() {
-//        return domainStage==null?domainStageFactory():domainStage;
-//    }
 
     public DomainController getDomainController() {
         return domainController;
@@ -146,4 +201,23 @@ public class Controller {
         this.domainController = domainController;
     }
 
+    public TableView<Variable> getVarTableView() {
+        return varTableView;
+    }
+
+    public String getVariableOperation() {
+        return variableOperation;
+    }
+
+    public void setVariableOperation(String variableOperation) {
+        this.variableOperation = variableOperation;
+    }
+
+    public VariableController getVariableController() {
+        return variableController;
+    }
+
+    public void setVariableController(VariableController variableController) {
+        this.variableController = variableController;
+    }
 }
