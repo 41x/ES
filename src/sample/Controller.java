@@ -41,9 +41,6 @@ public class Controller {
         if(!Main.getShell().setKnowledgeBase(file.getPath())) return;
         Main.getStage().setTitle(Main.getShell().getKnowledgeBase().getName()+" "+ file.getPath());
 
-        getDomainTableView().setItems(Main.getShell().getKnowledgeBase().getDomains().getList());
-//todo on openin new kb resetitems also to vars and rules
-
         try{
             PrintWriter writer = new PrintWriter("lastKB", "UTF-8");
             writer.print(file.getPath());

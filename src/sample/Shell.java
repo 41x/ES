@@ -72,6 +72,9 @@ public class Shell {
             return false;
         }
         this.knowledgeBase = kb;
+        Main.getController().getDomainTableView().setItems(getKnowledgeBase().getDomains().getList());
+//todo reset view links on new KB
+
         return true;
     }
 
