@@ -33,10 +33,15 @@ public class VariableController {
         if(!validate()) return;
 
         if(Main.getController().getVariableOperation().equals("add")){
-
+            Main.getShell().getKnowledgeBase().getVariables().add(
+                    getNameTextField().getText(),
+                    requestTextField.getText(),
+                    radioInfer.isSelected()?VarType.INFER:(radioRequest.isSelected()?VarType.ASK:VarType.INFER_ASK),
+                    getDomainCombo().getSelectionModel().getSelectedItem()
+            );
         }else if(Main.getController().getVariableOperation().equals("edit")){
 
-            ((Stage)getDomainCombo().getScene().getWindow()).close();
+            ((Stage)getNameTextField().getScene().getWindow()).close();
         }
     }
 
@@ -71,19 +76,10 @@ public class VariableController {
             getRequestTextField().requestFocus();
             return false;
         }
-
-//        todo
-//        if(getDomainCombo().getSelectionModel().isEmpty()) {
-//            bg=getDomainCombo().getBackground();
-//            getDomainCombo().setBackground(
-//                    new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-//            return false;
-//        }
-//
-//        getDomainCombo().onMouseClickedProperty().addListener((a,b,c)->{
-//            getDomainCombo().setBackground(bg);
-//        });
-
+        if(getDomainCombo().getSelectionModel().isEmpty()) {
+            getDomainCombo().show();
+            return false;
+        }
         return true;
     }
 

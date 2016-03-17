@@ -107,6 +107,8 @@ public class Controller {
 
     public void onEditVariable(ActionEvent actionEvent) {
 //        todo
+        setVariableOperation("edit");
+
     }
 
 

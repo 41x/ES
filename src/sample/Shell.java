@@ -73,6 +73,8 @@ public class Shell {
         }
         this.knowledgeBase = kb;
         Main.getController().getDomainTableView().setItems(getKnowledgeBase().getDomains().getList());
+        Main.getController().getVarTableView().setItems(getKnowledgeBase().getVariables().getList());
+
 //todo reset view links on new KB
 
         return true;

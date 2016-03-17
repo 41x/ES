@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Variables implements Serializable{
     private transient ObservableList<Variable> list;
     private KB kb;
+    private ArrayList<Variable> serList;
 
     public Variables() {
         this.list = FXCollections.observableArrayList();
@@ -60,6 +61,9 @@ public class Variables implements Serializable{
     }
 
     public void toSerializable() {
+        getList().forEach(Domain::toSerializable);
+        serList = new ArrayList<>(list);
+
 //        todo
     }
 
