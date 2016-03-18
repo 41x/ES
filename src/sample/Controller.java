@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.java.browser.plugin2.DOM;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -8,9 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -110,16 +109,13 @@ public class Controller {
         if (getVarTableView().getSelectionModel().isEmpty()) return;
         setVariableOperation("edit");
         Stage varStage = variableStageFactory();
+
         Variable selectedVar=getVarTableView().getSelectionModel().getSelectedItem();
         getVariableController().getNameTextField().setText(selectedVar.getName());
         getVariableController().getRadioInfer().setSelected(selectedVar.getType()==VarType.INFER);
         getVariableController().getRadioRequest().setSelected(selectedVar.getType()==VarType.ASK);
         getVariableController().getRadioInfReq().setSelected(selectedVar.getType()==VarType.INFER_ASK);
         getVariableController().getRequestTextField().setText(selectedVar.getQuestion());
-
-        getVariableController().getDomainCombo().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            getVariableController().getAddVarDomainValTableView().setItems(newValue.getValues().getList());
-        });
         getVariableController().getDomainCombo().getSelectionModel().select(selectedVar.getDomain());
 
         if (varStage != null) varStage.show();
@@ -141,17 +137,45 @@ public class Controller {
 
         TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
-        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
-                Integer.toString(getVariableController().getAddVarDomainValTableView().getItems()
-                        .indexOf(p.getValue()) + 1)));
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(Integer.toString(getVariableController()
+                .getAddVarDomainValTableView().getItems().indexOf(p.getValue()) + 1)));
         numberCol.setSortable(false);
 
         TableColumn<DomainValue, String> value= new TableColumn<>("Value");
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
         getVariableController().getAddVarDomainValTableView().getColumns().addAll(numberCol, value);
 
-        getVariableController().getDomainCombo()
-                .setItems(getKB().getDomains().getList());
+        getVariableController().getDomainCombo().setCellFactory(new Callback<ListView<Domain>,ListCell<Domain>>(){
+
+            @Override
+            public ListCell<Domain> call(ListView<Domain> p) {
+
+                final ListCell<Domain> cell = new ListCell<Domain>(){
+
+                    @Override
+                    protected void updateItem(Domain t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if(t != null){
+                            setText(t.getName());
+                        }else{
+                            setText(null);
+                        }
+                    }
+                };
+
+                return cell;
+            }
+        });
+
+        getVariableController().getDomainCombo().setItems(getKB().getDomains().getList());
+        // adding listener to combo
+        getVariableController().getDomainCombo().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if(newValue!=null)
+                        getVariableController().getAddVarDomainValTableView().setItems(
+                                newValue.getValues().getList());
+                });
 
         getVariableController().getRadioRequest().fire();
 

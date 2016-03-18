@@ -48,8 +48,13 @@ public class VariableController {
                     VarType.INFER:(getRadioRequest().isSelected()?VarType.ASK:VarType.INFER_ASK));
             selectedVar.setDomain(getDomainCombo().getSelectionModel().getSelectedItem());
 
-            Main.getController().getVarTabDomValTableView().setItems(selectedVar.getDomain().getValues().getList());
-            Main.getController().getReqTextArea().setText(selectedVar.getQuestion());
+            Main.getController().getVarTabDomValTableView()
+                    .setItems(selectedVar.getDomain().getValues().getList());
+            Main.getController().getReqTextArea()
+                    .setText(selectedVar.getQuestion());
+//            Main.getController().getVarTableView()
+//                    .setItems(Main.getShell().getKnowledgeBase().getVariables().getList());
+//            todo domains not updated in vartabview
             Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
             Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
 

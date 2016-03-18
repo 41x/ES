@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -64,21 +66,21 @@ public class DomainController {
 
             Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
 
-            TableView<DomainValue> addVarDomTabView=Main.getController().getVariableController().getAddVarDomainValTableView();
-            if (addVarDomTabView!=null)
-                addVarDomTabView.setItems(Main.getController().getVariableController()
-                        .getDomainCombo().getSelectionModel()
-                        .getSelectedItem().getValues().getList());
-            Main.getController().getVarTabDomValTableView().setItems(
-                    Main.getController().getVarTableView().getSelectionModel().getSelectedItem()
-                            .getDomain().getValues().getList());
-
-//            TableView<DomainValue> tw=Main.getController().getVarTabDomValTableView();
-//            if (tw!=null) {
-//                tw.setVisible(false);
-//                tw.setVisible(true);
-//            }
-
+            // update varTabEditDomValTV and combo if its called from editVar window
+            VariableController varcontr=Main.getController().getVariableController();
+            if (varcontr!=null){
+                Domain seld=varcontr.getDomainCombo().getSelectionModel().getSelectedItem();
+                SelectionModel<Domain> sm = varcontr.getDomainCombo().getSelectionModel();
+                sm.clearSelection();
+                sm.select(seld);
+            }
+            // upd varTabDomValTV
+            Main.getController().getVarTabDomValTableView().setItems(Main
+                    .getController().getVarTableView().getSelectionModel().getSelectedItem()
+                    .getDomain().getValues().getList());
+            // upd varTabTV
+            Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
+            Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
 
             ((Stage) valueTextField.getScene().getWindow()).close();
         }

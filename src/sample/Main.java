@@ -2,6 +2,7 @@ package sample;
 
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.*;
 
@@ -70,6 +72,7 @@ public class Main extends Application {
 
     private void buildVariablesTable(){
         getController().getVarTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         TableColumn<Variable,Integer> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
         numberCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
@@ -83,7 +86,8 @@ public class Main extends Application {
         vartype.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         TableColumn<Variable, String> value2= new TableColumn<>("Domain");
-        value2.setCellValueFactory(new PropertyValueFactory<>("domain"));
+        value2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
+                p.getValue().getDomain().getName()));
 
         controller.getVarTableView().getColumns().addAll(numberCol,value,vartype,value2);
 //
@@ -111,7 +115,6 @@ public class Main extends Application {
     private void buildDomainsTable(){
         getController().getDomainTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         getController().getDomainValuesTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
 
         TableColumn<Domain,Integer> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
