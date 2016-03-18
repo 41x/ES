@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.io.Serializable;
 
 /**
@@ -12,18 +15,22 @@ public class Variable implements Serializable {
     private Domain domain;
 
     public Variable(String name, String question, VarType type, Domain domain) {
-        this.name = name;
+        setName(name);
         this.question = question;
         this.type = type;
         this.domain = domain;
     }
 
-    public boolean usesDomain(Domain d){
-        return domain.equals(d);
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean usesDomain(Domain d){
+        return domain.equals(d);
     }
 
     public Domain getDomain() {
@@ -38,7 +45,21 @@ public class Variable implements Serializable {
         return question;
     }
 
-    public void toSerializable() {
-//        todo
+//    public void toSerializable() {
+//    }
+
+
+    public void setQuestion(String question) {
+        this.question = question;
     }
+
+    public void setType(VarType type) {
+        this.type = type;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
+    }
+
+
 }

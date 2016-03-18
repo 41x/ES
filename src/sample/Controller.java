@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -27,7 +28,8 @@ public class Controller {
     public TableView<Domain> domainTableView;
     public TableView<DomainValue> domainValuesTableView;
     public TableView<Variable> varTableView;
-    public TableView varTabDomValTableView;
+    public TableView<DomainValue> varTabDomValTableView;
+    public TextArea reqTextArea;
 
     private DomainController domainController;
     private String domainOperation;
@@ -39,7 +41,7 @@ public class Controller {
         File file = fileChooser.showOpenDialog(Main.getStage());
         if (file == null) return;
         if(!Main.getShell().setKnowledgeBase(file.getPath())) return;
-        Main.getStage().setTitle(Main.getShell().getKnowledgeBase().getName()+" "+ file.getPath());
+        Main.getStage().setTitle(getKB().getName()+" "+ file.getPath());
 
         try{
             PrintWriter writer = new PrintWriter("lastKB", "UTF-8");
@@ -90,8 +92,7 @@ public class Controller {
     public void onDeleteDomain(ActionEvent actionEvent) {
         if (getDomainTableView().getSelectionModel().isEmpty()) return;
         Domain selDomain = getDomainTableView().getSelectionModel().getSelectedItem();
-        Main.getShell().getKnowledgeBase().getDomains().remove(selDomain);
-//        getDomainValuesTableView().getItems().clear();
+        getKB().getDomains().remove(selDomain);
     }
 
 
@@ -106,9 +107,22 @@ public class Controller {
 
 
     public void onEditVariable(ActionEvent actionEvent) {
-//        todo
+        if (getVarTableView().getSelectionModel().isEmpty()) return;
         setVariableOperation("edit");
+        Stage varStage = variableStageFactory();
+        Variable selectedVar=getVarTableView().getSelectionModel().getSelectedItem();
+        getVariableController().getNameTextField().setText(selectedVar.getName());
+        getVariableController().getRadioInfer().setSelected(selectedVar.getType()==VarType.INFER);
+        getVariableController().getRadioRequest().setSelected(selectedVar.getType()==VarType.ASK);
+        getVariableController().getRadioInfReq().setSelected(selectedVar.getType()==VarType.INFER_ASK);
+        getVariableController().getRequestTextField().setText(selectedVar.getQuestion());
 
+        getVariableController().getDomainCombo().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            getVariableController().getAddVarDomainValTableView().setItems(newValue.getValues().getList());
+        });
+        getVariableController().getDomainCombo().getSelectionModel().select(selectedVar.getDomain());
+
+        if (varStage != null) varStage.show();
     }
 
 
@@ -137,7 +151,7 @@ public class Controller {
         getVariableController().getAddVarDomainValTableView().getColumns().addAll(numberCol, value);
 
         getVariableController().getDomainCombo()
-                .setItems(Main.getShell().getKnowledgeBase().getDomains().getList());
+                .setItems(getKB().getDomains().getList());
 
         getVariableController().getRadioRequest().fire();
 
@@ -218,5 +232,21 @@ public class Controller {
 
     public void setVariableController(VariableController variableController) {
         this.variableController = variableController;
+    }
+
+    public TableView<DomainValue> getVarTabDomValTableView() {
+        return varTabDomValTableView;
+    }
+
+    public TextArea getReqTextArea() {
+        return reqTextArea;
+    }
+
+    public void onVarDelete(ActionEvent actionEvent) {
+        getKB().getVariables().remove(getVarTableView().getSelectionModel().getSelectedItem());
+    }
+
+    private KB getKB(){
+        return Main.getShell().getKnowledgeBase();
     }
 }

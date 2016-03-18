@@ -59,7 +59,7 @@ public class Domains implements Serializable{
     public void toWorkingState() {
         setList(FXCollections.observableArrayList(getSerList()));
         getList().forEach(Domain::toWorkingState);
-        setSerList(null);
+//        setSerList(null);
     }
 
     public void setList(ObservableList<Domain> list) {

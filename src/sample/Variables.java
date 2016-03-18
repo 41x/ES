@@ -1,10 +1,13 @@
 package sample;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by alxAsus on 28.02.2016.
@@ -28,9 +31,8 @@ public class Variables implements Serializable{
         return true;
     }
 
-    public boolean remove(String varname){
-        Variable v=find(varname);
-        return v != null && list.remove(v);
+    public boolean remove(Variable v){
+        return getList().remove(v);
     }
 
     public boolean useDomain(Domain d) {
@@ -46,10 +48,8 @@ public class Variables implements Serializable{
     }
 
     public Variable find(String varname){
-        int i=0;
-        while (i<list.size() && !list.get(i).getName().equalsIgnoreCase(varname)) i++;
-        if(i == list.size()) return null;
-        return list.get(i);
+        List<Variable> l=getList().stream().filter(v->v.getName()==varname).collect(Collectors.toList());
+        return l.size()>0?l.get(0):null;
     }
 
     public void setKb(KB kb) {
@@ -61,13 +61,31 @@ public class Variables implements Serializable{
     }
 
     public void toSerializable() {
-        getList().forEach(Domain::toSerializable);
-        serList = new ArrayList<>(list);
-
-//        todo
+        setSerList(new ArrayList<>(list));
     }
 
     public void toWorkingState() {
-//        todo
+        setList(FXCollections.observableArrayList(getSerList()));
+        getList().addListener(new ListChangeListener<Variable>() {
+            @Override
+            public void onChanged(Change<? extends Variable> c) {
+                System.out.println("list was changed");
+            }
+        });
+
     }
+
+    public ArrayList<Variable> getSerList() {
+        return serList;
+    }
+
+    public void setSerList(ArrayList<Variable> serList) {
+        this.serList = serList;
+    }
+
+    public void setList(ObservableList<Variable> list) {
+        this.list = list;
+    }
+
+
 }

@@ -42,7 +42,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextArea>
-      <ComboBox fx:id="domainCombo" onAction="#removeBackground" onHiding="#onDomainSelected" prefWidth="1000.0" promptText="Select Domain">
+      <ComboBox fx:id="domainCombo" prefWidth="1000.0" promptText="Select Domain">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>

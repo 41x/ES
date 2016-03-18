@@ -61,7 +61,25 @@ public class DomainController {
                     .equalsIgnoreCase(nameTextField.getText())).count() > 0)) return;
             selectedDomain.setName(nameTextField.getText());
             selectedDomain.getValues().setList(list);
+
             Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
+
+            TableView<DomainValue> addVarDomTabView=Main.getController().getVariableController().getAddVarDomainValTableView();
+            if (addVarDomTabView!=null)
+                addVarDomTabView.setItems(Main.getController().getVariableController()
+                        .getDomainCombo().getSelectionModel()
+                        .getSelectedItem().getValues().getList());
+            Main.getController().getVarTabDomValTableView().setItems(
+                    Main.getController().getVarTableView().getSelectionModel().getSelectedItem()
+                            .getDomain().getValues().getList());
+
+//            TableView<DomainValue> tw=Main.getController().getVarTabDomValTableView();
+//            if (tw!=null) {
+//                tw.setVisible(false);
+//                tw.setVisible(true);
+//            }
+
+
             ((Stage) valueTextField.getScene().getWindow()).close();
         }
     }

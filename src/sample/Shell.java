@@ -15,7 +15,7 @@ public class Shell {
 
     public Shell(Ilim lim) {
         memory=new WMemory();
-        this.knowledgeBase = (new KBFactory()).make();
+        setKB((new KBFactory()).make());
         ((MyLIM)lim).setMemory(memory);
         ((MyLIM)lim).setKb(knowledgeBase);
         this.lim = lim;
@@ -71,14 +71,18 @@ public class Shell {
             System.out.println(String.format("Could not deserialize %s",path));
             return false;
         }
+        return setKB(kb);
+    }
+
+    public boolean setKB(KB kb) {
         this.knowledgeBase = kb;
         Main.getController().getDomainTableView().setItems(getKnowledgeBase().getDomains().getList());
         Main.getController().getVarTableView().setItems(getKnowledgeBase().getVariables().getList());
-
 //todo reset view links on new KB
-
         return true;
     }
+
+
 
     public KB getKnowledgeBase() {
         return knowledgeBase;

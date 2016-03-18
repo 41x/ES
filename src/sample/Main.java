@@ -2,20 +2,15 @@ package sample;
 
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 
 public class Main extends Application {
 
@@ -56,14 +51,15 @@ public class Main extends Application {
             }
         }
 
+        buildDomainsTable();
+        buildVariablesTable();
+
         shell=new Shell(new MyLIM());
         boolean kbisset=false;
         if (kbPath!=null)
             kbisset=shell.setKnowledgeBase(kbPath);
 
         stage.setTitle(shell.getKnowledgeBase().getName()+" "+ (kbisset?kbPath:""));
-        fillDomainsTab();
-        fillVariablesTab();
 
         stage.setScene(new Scene(root));
         stage.show();
@@ -72,12 +68,12 @@ public class Main extends Application {
     }
 
 
-    private void fillVariablesTab(){
-
+    private void buildVariablesTable(){
+        getController().getVarTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<Variable,Integer> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
         numberCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
-                controller.getVarTableView().getItems().indexOf(p.getValue()) + 1));
+                getController().getVarTableView().getItems().indexOf(p.getValue()) + 1));
         numberCol.setSortable(false);
 
         TableColumn<Variable, String> value= new TableColumn<>("Name");
@@ -86,69 +82,67 @@ public class Main extends Application {
         TableColumn<Variable, VarType> vartype= new TableColumn<>("Type");
         vartype.setCellValueFactory(new PropertyValueFactory<>("type"));
 
+        TableColumn<Variable, String> value2= new TableColumn<>("Domain");
+        value2.setCellValueFactory(new PropertyValueFactory<>("domain"));
 
+        controller.getVarTableView().getColumns().addAll(numberCol,value,vartype,value2);
+//
+        TableColumn<DomainValue,Integer> numberCol2 = new TableColumn<>("#");
+        numberCol2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
+                getController().getVarTabDomValTableView().getItems().indexOf(p.getValue()) + 1));
+        numberCol2.setSortable(false);
+        numberCol2.setPrefWidth(50);
 
-        controller.getVarTableView().getColumns().addAll(numberCol,value,vartype);
+        TableColumn<DomainValue, String> domval= new TableColumn<>("Value");
+        domval.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-        controller.getVarTableView().setItems(getShell().getKnowledgeBase().getVariables().getList());
-//todo
-//        TableColumn<DomainValue,Integer> numberCol2 = new TableColumn<>("#");
-//        numberCol2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
-//                controller.getDomainValuesTableView().getItems().indexOf(p.getValue()) + 1));
-//        numberCol2.setSortable(false);
-//        numberCol2.setPrefWidth(50);
-//
-//        TableColumn<DomainValue, String> value2= new TableColumn<>("Value");
-//        value2.setCellValueFactory(new PropertyValueFactory<>("value"));
-//
-//        controller.getDomainValuesTableView().getColumns().addAll(numberCol2,value2);
-//
-//        controller.getDomainTableView().getSelectionModel().selectedItemProperty()
-//                .addListener((obs, oldSelection, newSelection) -> {
-//            if (newSelection != null) {
-//                controller.getDomainValuesTableView().setItems(newSelection.getValues().getList());
-//            }
-//        });
-//
-//        if(controller.domainTableView.getItems().size()>0)
-//            controller.domainTableView.getSelectionModel().select(0);
+        getController().getVarTabDomValTableView().getColumns().addAll(numberCol2,domval);
+
+        getController().getVarTableView().getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldSelection, newSelection) -> {
+                    if (newSelection != null) {
+                        getController().getVarTabDomValTableView().setItems(newSelection.getDomain().getValues().getList());
+                        getController().getReqTextArea().setText(newSelection.getQuestion());
+                    }
+                });
 
     }
 
-    private void fillDomainsTab(){
+    private void buildDomainsTable(){
+        getController().getDomainTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        getController().getDomainValuesTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
         TableColumn<Domain,Integer> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
         numberCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
-                controller.getDomainTableView().getItems().indexOf(p.getValue()) + 1));
+                getController().getDomainTableView().getItems().indexOf(p.getValue()) + 1));
         numberCol.setSortable(false);
 
         TableColumn<Domain, String> value= new TableColumn<>("Name");
         value.setCellValueFactory(new PropertyValueFactory<>("name"));
-        controller.getDomainTableView().getColumns().addAll(numberCol,value);
-
-        controller.getDomainTableView().setItems(getShell().getKnowledgeBase().getDomains().getList());
+        getController().getDomainTableView().getColumns().addAll(numberCol,value);
 
         TableColumn<DomainValue,Integer> numberCol2 = new TableColumn<>("#");
         numberCol2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
-                controller.getDomainValuesTableView().getItems().indexOf(p.getValue()) + 1));
+                getController().getDomainValuesTableView().getItems().indexOf(p.getValue()) + 1));
         numberCol2.setSortable(false);
         numberCol2.setPrefWidth(50);
 
         TableColumn<DomainValue, String> value2= new TableColumn<>("Value");
         value2.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-        controller.getDomainValuesTableView().getColumns().addAll(numberCol2,value2);
+        getController().getDomainValuesTableView().getColumns().addAll(numberCol2,value2);
 
-        controller.getDomainTableView().getSelectionModel().selectedItemProperty()
+        getController().getDomainTableView().getSelectionModel().selectedItemProperty()
                 .addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                controller.getDomainValuesTableView().setItems(newSelection.getValues().getList());
+                getController().getDomainValuesTableView().setItems(newSelection.getValues().getList());
             }
         });
 
-        if(controller.domainTableView.getItems().size()>0)
-            controller.domainTableView.getSelectionModel().select(0);
+        if(getController().getDomainTableView().getItems().size()>0)
+            getController().getDomainTableView().getSelectionModel().select(0);
 
     }
 
