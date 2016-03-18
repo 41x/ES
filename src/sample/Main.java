@@ -87,7 +87,7 @@ public class Main extends Application {
 
         TableColumn<Variable, String> value2= new TableColumn<>("Domain");
         value2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
-                p.getValue().getDomain().getName()));
+                p.getValue().getDomain()==null?null:p.getValue().getDomain().getName()));
 
         controller.getVarTableView().getColumns().addAll(numberCol,value,vartype,value2);
 //
@@ -105,7 +105,8 @@ public class Main extends Application {
         getController().getVarTableView().getSelectionModel().selectedItemProperty()
                 .addListener((obs, oldSelection, newSelection) -> {
                     if (newSelection != null) {
-                        getController().getVarTabDomValTableView().setItems(newSelection.getDomain().getValues().getList());
+                        getController().getVarTabDomValTableView().setItems(newSelection.getDomain()==null?null
+                                :newSelection.getDomain().getValues().getList());
                         getController().getReqTextArea().setText(newSelection.getQuestion());
                     }
                 });

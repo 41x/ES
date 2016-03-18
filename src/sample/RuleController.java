@@ -1,19 +1,10 @@
 package sample;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class VariableController {
+public class RuleController {
     public TextField nameTextField;
     public RadioButton radioInfer;
     public RadioButton radioRequest;
@@ -48,13 +39,13 @@ public class VariableController {
                     VarType.INFER:(getRadioRequest().isSelected()?VarType.ASK:VarType.INFER_ASK));
             selectedVar.setDomain(getDomainCombo().getSelectionModel().getSelectedItem());
 
-
             Main.getController().getVarTabDomValTableView()
-                    .setItems(selectedVar.getDomain()==null?null
-                            :selectedVar.getDomain().getValues().getList());
+                    .setItems(selectedVar.getDomain().getValues().getList());
             Main.getController().getReqTextArea()
                     .setText(selectedVar.getQuestion());
-
+//            Main.getController().getVarTableView()
+//                    .setItems(Main.getShell().getKnowledgeBase().getVariables().getList());
+//            todo domains not updated in vartabview
             Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
             Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
 
@@ -93,12 +84,7 @@ public class VariableController {
             getRequestTextField().requestFocus();
             return false;
         }
-
-        if(getDomainCombo().getSelectionModel().isEmpty() && !getRadioRequest().isSelected()) {
-            getDomainCombo().show();
-            return false;
-        }
-        if(!getDomainCombo().getSelectionModel().isEmpty() && getRadioRequest().isSelected()) {
+        if(getDomainCombo().getSelectionModel().isEmpty()) {
             getDomainCombo().show();
             return false;
         }

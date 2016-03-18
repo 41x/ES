@@ -1,7 +1,9 @@
 package sample;
 
 import com.sun.java.browser.plugin2.DOM;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -177,7 +179,19 @@ public class Controller {
                                 newValue.getValues().getList());
                 });
 
-        getVariableController().getRadioRequest().fire();
+        getVariableController().getRadioInfer().fire();
+        final ToggleGroup group = getVariableController().getRadioInfer().getToggleGroup();
+
+        group.selectedToggleProperty()
+                .addListener((ov, old_toggle, new_toggle) -> {
+                    if (group.getSelectedToggle() != null) {
+                        if (new_toggle==getVariableController().getRadioRequest()){
+                            getVariableController().getDomainCombo().getSelectionModel().clearSelection();
+                            getVariableController().getAddVarDomainValTableView().setItems(null);
+                        }
+                    }
+                });
+
 
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
