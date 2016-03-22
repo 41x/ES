@@ -75,9 +75,9 @@ public class DomainController {
                 sm.select(seld);
             }
             // upd varTabDomValTV
-            Main.getController().getVarTabDomValTableView().setItems(Main
-                    .getController().getVarTableView().getSelectionModel().getSelectedItem()
-                    .getDomain().getValues().getList());
+            Domain selDomain=Main.getController().getVarTableView().getSelectionModel().getSelectedItem().getDomain();
+            Main.getController().getVarTabDomValTableView().setItems(selDomain==null?null
+                    :selDomain.getValues().getList());
             // upd varTabTV
             Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
             Main.getController().getVarTableView().getColumns().get(0).setVisible(true);

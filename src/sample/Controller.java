@@ -1,10 +1,6 @@
 package sample;
 
-import com.sun.java.browser.plugin2.DOM;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,10 +15,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toCollection;
 
 public class Controller {
     final FileChooser fileChooser = new FileChooser();
@@ -37,6 +29,10 @@ public class Controller {
 
     private VariableController variableController;
     private String variableOperation;
+
+    private RuleController ruleController;
+    private String RuleOperation;
+
 
     public void OpenKB(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(Main.getStage());
@@ -121,6 +117,133 @@ public class Controller {
         getVariableController().getDomainCombo().getSelectionModel().select(selectedVar.getDomain());
 
         if (varStage != null) varStage.show();
+    }
+
+    public void onAddRule(ActionEvent actionEvent) {
+        setRuleOperation("add");
+        Stage varStage = ruleStageFactory();
+
+        if (varStage != null)
+            varStage.show();
+    }
+
+    private Stage ruleStageFactory() {
+        Stage stage=new Stage();
+        Parent root;
+        FXMLLoader loader;
+        try {
+            loader = new FXMLLoader(getClass().getResource("Rule.fxml"));
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        setRuleController(loader.getController());
+//        premises table
+        TableColumn<VarVal,String> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(Integer.toString(getRuleController()
+                .getAddRulePremisesTableView().getItems().indexOf(p.getValue()) + 1)));
+        numberCol.setSortable(false);
+
+        TableColumn<VarVal, String> varname= new TableColumn<>("Variable");
+        varname.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(p.getValue().getVariable().getName()));
+
+        TableColumn<VarVal,String> eq = new TableColumn<>("");
+        eq.setPrefWidth(30);
+        eq.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>("="));
+
+        TableColumn<VarVal, String> value= new TableColumn<>("Value");
+        value.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(p.getValue().getDomainValue().getValue()));
+        getRuleController().getAddRulePremisesTableView().getColumns().addAll(numberCol,varname,eq, value);
+
+        //configuring combos
+        getRuleController().getAddRulePremisVarCombo().setCellFactory(new Callback<ListView<Variable>,ListCell<Variable>>(){
+            @Override
+            public ListCell<Variable> call(ListView<Variable> p) {
+                return new ListCell<Variable>(){
+                    @Override
+                    protected void updateItem(Variable t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if(t != null){
+                            setText(t.getName());
+                        }else{
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        getRuleController().getAddRuleConcVarCombo().setCellFactory(new Callback<ListView<Variable>,ListCell<Variable>>(){
+            @Override
+            public ListCell<Variable> call(ListView<Variable> p) {
+                return new ListCell<Variable>(){
+                    @Override
+                    protected void updateItem(Variable t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if(t != null){
+                            setText(t.getName());
+                        }else{
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        getRuleController().getAddRulePremisDomValCombo().setCellFactory(
+                new Callback<ListView<DomainValue>,ListCell<DomainValue>>(){
+            @Override
+            public ListCell<DomainValue> call(ListView<DomainValue> p) {
+                return new ListCell<DomainValue>(){
+                    @Override
+                    protected void updateItem(DomainValue t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if(t != null){
+                            setText(t.getValue());
+                        }else{
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+        getRuleController().getAddRuleConcDomValCombo().setCellFactory(
+                new Callback<ListView<DomainValue>,ListCell<DomainValue>>(){
+            @Override
+            public ListCell<DomainValue> call(ListView<DomainValue> p) {
+                return new ListCell<DomainValue>(){
+                    @Override
+                    protected void updateItem(DomainValue t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if(t != null){
+                            setText(t.getValue());
+                        }else{
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+
+        getRuleController().getAddRulePremisVarCombo().setItems(
+                Main.getShell().getKnowledgeBase().getVariables().getList());
+        // adding listener to combo
+        getRuleController().getAddRulePremisVarCombo().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if(newValue!=null)
+                        getRuleController().getAddRulePremisDomValCombo().setItems(
+                                newValue.getDomain().getValues().getList());
+                });
+
+
+
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return stage;
     }
 
 
@@ -286,5 +409,21 @@ public class Controller {
 
     private KB getKB(){
         return Main.getShell().getKnowledgeBase();
+    }
+
+    public String getRuleOperation() {
+        return RuleOperation;
+    }
+
+    public void setRuleOperation(String ruleOperation) {
+        RuleOperation = ruleOperation;
+    }
+
+    public RuleController getRuleController() {
+        return ruleController;
+    }
+
+    public void setRuleController(RuleController ruleController) {
+        this.ruleController = ruleController;
     }
 }

@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Serialization workaround with observablelist and simplestringproperty">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/12.kb" afterPath="$PROJECT_DIR$/12.kb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ES/sample/Controller.class" afterPath="$PROJECT_DIR$/out/production/ES/sample/Controller.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ES/sample/Main.class" afterPath="$PROJECT_DIR$/out/production/ES/sample/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ES/sample/Variable.class" afterPath="$PROJECT_DIR$/out/production/ES/sample/Variable.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ES/sample/VariableController.class" afterPath="$PROJECT_DIR$/out/production/ES/sample/VariableController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lastKB" afterPath="$PROJECT_DIR$/lastKB" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ES/sample/Rule.fxml" afterPath="$PROJECT_DIR$/out/production/ES/sample/Rule.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Controller.java" afterPath="$PROJECT_DIR$/src/sample/Controller.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/DomainController.java" afterPath="$PROJECT_DIR$/src/sample/DomainController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Rule.fxml" afterPath="$PROJECT_DIR$/src/sample/Rule.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Rule.java" afterPath="$PROJECT_DIR$/src/sample/Rule.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Variable.java" afterPath="$PROJECT_DIR$/src/sample/Variable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/VariableController.java" afterPath="$PROJECT_DIR$/src/sample/VariableController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/RuleController.java" afterPath="$PROJECT_DIR$/src/sample/RuleController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/sample.fxml" afterPath="$PROJECT_DIR$/src/sample/sample.fxml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -81,17 +73,7 @@
         <entry file="file://$PROJECT_DIR$/src/sample/Variable.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VariableController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/VariableController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="148" column="0" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
+              <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -130,16 +112,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Conclusion.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/Conclusion.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Variables.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Variables.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -150,11 +122,69 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7259787">
+              <caret line="254" column="48" selection-start-line="254" selection-start-column="48" selection-end-line="254" selection-end-column="48" />
+              <folding>
+                <element signature="e#13572#13573#0" expanded="true" />
+                <element signature="e#13611#13612#0" expanded="true" />
+                <element signature="e#13653#13654#0" expanded="true" />
+                <element signature="e#13691#13692#0" expanded="true" />
+                <element signature="e#13753#13754#0" expanded="true" />
+                <element signature="e#13807#13808#0" expanded="true" />
+                <element signature="e#13871#13872#0" expanded="true" />
+                <element signature="e#13915#13916#0" expanded="true" />
+                <element signature="e#13968#13969#0" expanded="true" />
+                <element signature="e#14006#14007#0" expanded="true" />
+                <element signature="e#14080#14081#0" expanded="true" />
+                <element signature="e#14136#14137#0" expanded="true" />
+                <element signature="e#14188#14189#0" expanded="true" />
+                <element signature="e#14223#14224#0" expanded="true" />
+                <element signature="e#14267#14268#0" expanded="true" />
+                <element signature="e#14307#14308#0" expanded="true" />
+                <element signature="e#14373#14374#0" expanded="true" />
+                <element signature="e#14431#14432#0" expanded="true" />
+                <element signature="e#14488#14489#0" expanded="true" />
+                <element signature="e#14529#14530#0" expanded="true" />
+                <element signature="e#14733#14734#0" expanded="true" />
+                <element signature="e#14777#14778#0" expanded="true" />
+                <element signature="e#14817#14818#0" expanded="true" />
+                <element signature="e#14851#14852#0" expanded="true" />
+                <element signature="e#15034#15035#0" expanded="true" />
+                <element signature="e#15091#15092#0" expanded="true" />
+                <element signature="e#15131#15132#0" expanded="true" />
+                <element signature="e#15167#15168#0" expanded="true" />
+                <element signature="e#15225#15226#0" expanded="true" />
+                <element signature="e#15270#15271#0" expanded="true" />
+                <element signature="e#15319#15320#0" expanded="true" />
+                <element signature="e#15356#15357#0" expanded="true" />
+                <element signature="e#15424#15425#0" expanded="true" />
+                <element signature="e#15476#15477#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Rule.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Rule.fxml">
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.581818">
+              <caret line="103" column="92" selection-start-line="103" selection-start-column="92" selection-end-line="103" selection-end-column="92" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DomainController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/DomainController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="21" selection-start-line="115" selection-start-column="21" selection-end-line="115" selection-end-column="21" />
+              <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -164,21 +194,34 @@
         <entry file="file://$PROJECT_DIR$/src/sample/RuleController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-              <folding />
+              <caret line="118" column="31" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
+              <folding>
+                <element signature="e#3784#3785#0" expanded="true" />
+                <element signature="e#3831#3832#0" expanded="true" />
+                <element signature="e#4046#4047#0" expanded="true" />
+                <element signature="e#4090#4091#0" expanded="true" />
+                <element signature="e#4156#4157#0" expanded="true" />
+                <element signature="e#4203#4204#0" expanded="true" />
+                <element signature="e#4261#4262#0" expanded="true" />
+                <element signature="e#4303#4304#0" expanded="true" />
+                <element signature="e#4367#4368#0" expanded="true" />
+                <element signature="e#4412#4413#0" expanded="true" />
+                <element signature="e#4456#4457#0" expanded="true" />
+                <element signature="e#4494#4495#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+      <file leaf-file-name="sample.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18073721">
-              <caret line="228" column="0" selection-start-line="228" selection-start-column="0" selection-end-line="228" selection-end-column="0" />
-              <folding>
-                <element signature="e#8784#8785#0" expanded="true" />
-                <element signature="e#8822#8823#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-4.7636366">
+              <caret line="39" column="100" selection-start-line="39" selection-start-column="100" selection-end-line="39" selection-end-column="100" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -242,13 +285,13 @@
         <option value="$PROJECT_DIR$/src/sample/Shell.java" />
         <option value="$PROJECT_DIR$/src/sample/Variables.java" />
         <option value="$PROJECT_DIR$/src/sample/Variable.fxml" />
-        <option value="$PROJECT_DIR$/src/sample/DomainController.java" />
-        <option value="$PROJECT_DIR$/src/sample/RuleController.java" />
         <option value="$PROJECT_DIR$/src/sample/Rule.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Main.java" />
         <option value="$PROJECT_DIR$/src/sample/VariableController.java" />
         <option value="$PROJECT_DIR$/src/sample/Rule.java" />
         <option value="$PROJECT_DIR$/src/sample/Variable.java" />
+        <option value="$PROJECT_DIR$/src/sample/DomainController.java" />
+        <option value="$PROJECT_DIR$/src/sample/RuleController.java" />
         <option value="$PROJECT_DIR$/src/sample/Controller.java" />
       </list>
     </option>
@@ -553,6 +596,36 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Specs2RunConfiguration" factoryName="Specs2">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -607,6 +680,21 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="uTestRunConfiguration" factoryName="utest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
       <method />
     </configuration>
     <configuration default="false" name="Main" type="Application" factoryName="Application">
@@ -712,7 +800,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3210587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3210587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2605178" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
@@ -831,7 +919,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-          <folding />
+          <folding>
+            <element signature="e#3784#3785#0" expanded="true" />
+            <element signature="e#3831#3832#0" expanded="true" />
+            <element signature="e#4046#4047#0" expanded="true" />
+            <element signature="e#4090#4091#0" expanded="true" />
+            <element signature="e#4156#4157#0" expanded="true" />
+            <element signature="e#4203#4204#0" expanded="true" />
+            <element signature="e#4261#4262#0" expanded="true" />
+            <element signature="e#4303#4304#0" expanded="true" />
+            <element signature="e#4367#4368#0" expanded="true" />
+            <element signature="e#4412#4413#0" expanded="true" />
+            <element signature="e#4456#4457#0" expanded="true" />
+            <element signature="e#4494#4495#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -840,8 +941,40 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#8784#8785#0" expanded="true" />
-            <element signature="e#8822#8823#0" expanded="true" />
+            <element signature="e#13572#13573#0" expanded="true" />
+            <element signature="e#13611#13612#0" expanded="true" />
+            <element signature="e#13653#13654#0" expanded="true" />
+            <element signature="e#13691#13692#0" expanded="true" />
+            <element signature="e#13753#13754#0" expanded="true" />
+            <element signature="e#13807#13808#0" expanded="true" />
+            <element signature="e#13871#13872#0" expanded="true" />
+            <element signature="e#13915#13916#0" expanded="true" />
+            <element signature="e#13968#13969#0" expanded="true" />
+            <element signature="e#14006#14007#0" expanded="true" />
+            <element signature="e#14080#14081#0" expanded="true" />
+            <element signature="e#14136#14137#0" expanded="true" />
+            <element signature="e#14188#14189#0" expanded="true" />
+            <element signature="e#14223#14224#0" expanded="true" />
+            <element signature="e#14267#14268#0" expanded="true" />
+            <element signature="e#14307#14308#0" expanded="true" />
+            <element signature="e#14373#14374#0" expanded="true" />
+            <element signature="e#14431#14432#0" expanded="true" />
+            <element signature="e#14488#14489#0" expanded="true" />
+            <element signature="e#14529#14530#0" expanded="true" />
+            <element signature="e#14733#14734#0" expanded="true" />
+            <element signature="e#14777#14778#0" expanded="true" />
+            <element signature="e#14817#14818#0" expanded="true" />
+            <element signature="e#14851#14852#0" expanded="true" />
+            <element signature="e#15034#15035#0" expanded="true" />
+            <element signature="e#15091#15092#0" expanded="true" />
+            <element signature="e#15131#15132#0" expanded="true" />
+            <element signature="e#15167#15168#0" expanded="true" />
+            <element signature="e#15225#15226#0" expanded="true" />
+            <element signature="e#15270#15271#0" expanded="true" />
+            <element signature="e#15319#15320#0" expanded="true" />
+            <element signature="e#15356#15357#0" expanded="true" />
+            <element signature="e#15424#15425#0" expanded="true" />
+            <element signature="e#15476#15477#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1031,17 +1164,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="102" column="99" selection-start-line="102" selection-start-column="99" selection-end-line="102" selection-end-column="99" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Variable.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
@@ -1065,6 +1187,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1072,6 +1195,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1079,6 +1203,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#441#442#0" expanded="false" />
+            <element signature="e#473#474#0" expanded="false" />
+            <element signature="e#905#906#0" expanded="false" />
+            <element signature="e#937#938#0" expanded="false" />
+            <element signature="e#2080#2081#0" expanded="false" />
+            <element signature="e#2107#2108#0" expanded="false" />
+            <element signature="e#2151#2152#0" expanded="false" />
+            <element signature="e#2187#2188#0" expanded="false" />
+            <element signature="e#2573#2574#0" expanded="false" />
+            <element signature="e#2603#2604#0" expanded="false" />
+            <element signature="e#2665#2666#0" expanded="false" />
+            <element signature="e#2703#2704#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1086,6 +1225,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1093,33 +1233,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="45" column="34" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/DomainController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Rule.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.413793">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/RuleController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-          <folding />
+          <folding>
+            <element signature="e#1199#1200#0" expanded="true" />
+            <element signature="e#1226#1227#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1147,34 +1264,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/VarVal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Premises.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Variables.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Variable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
           <folding />
         </state>
       </provider>
@@ -1190,13 +1283,120 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.7636366">
+          <caret line="39" column="100" selection-start-line="39" selection-start-column="100" selection-end-line="39" selection-end-column="100" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Variable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Premises.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/VarVal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/DomainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Rule.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.581818">
+          <caret line="103" column="92" selection-start-line="103" selection-start-column="92" selection-end-line="103" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/RuleController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="118" column="31" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
+          <folding>
+            <element signature="e#3784#3785#0" expanded="true" />
+            <element signature="e#3831#3832#0" expanded="true" />
+            <element signature="e#4046#4047#0" expanded="true" />
+            <element signature="e#4090#4091#0" expanded="true" />
+            <element signature="e#4156#4157#0" expanded="true" />
+            <element signature="e#4203#4204#0" expanded="true" />
+            <element signature="e#4261#4262#0" expanded="true" />
+            <element signature="e#4303#4304#0" expanded="true" />
+            <element signature="e#4367#4368#0" expanded="true" />
+            <element signature="e#4412#4413#0" expanded="true" />
+            <element signature="e#4456#4457#0" expanded="true" />
+            <element signature="e#4494#4495#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18073721">
-          <caret line="228" column="0" selection-start-line="228" selection-start-column="0" selection-end-line="228" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7259787">
+          <caret line="254" column="48" selection-start-line="254" selection-start-column="48" selection-end-line="254" selection-end-column="48" />
           <folding>
-            <element signature="e#8784#8785#0" expanded="true" />
-            <element signature="e#8822#8823#0" expanded="true" />
+            <element signature="e#13572#13573#0" expanded="true" />
+            <element signature="e#13611#13612#0" expanded="true" />
+            <element signature="e#13653#13654#0" expanded="true" />
+            <element signature="e#13691#13692#0" expanded="true" />
+            <element signature="e#13753#13754#0" expanded="true" />
+            <element signature="e#13807#13808#0" expanded="true" />
+            <element signature="e#13871#13872#0" expanded="true" />
+            <element signature="e#13915#13916#0" expanded="true" />
+            <element signature="e#13968#13969#0" expanded="true" />
+            <element signature="e#14006#14007#0" expanded="true" />
+            <element signature="e#14080#14081#0" expanded="true" />
+            <element signature="e#14136#14137#0" expanded="true" />
+            <element signature="e#14188#14189#0" expanded="true" />
+            <element signature="e#14223#14224#0" expanded="true" />
+            <element signature="e#14267#14268#0" expanded="true" />
+            <element signature="e#14307#14308#0" expanded="true" />
+            <element signature="e#14373#14374#0" expanded="true" />
+            <element signature="e#14431#14432#0" expanded="true" />
+            <element signature="e#14488#14489#0" expanded="true" />
+            <element signature="e#14529#14530#0" expanded="true" />
+            <element signature="e#14733#14734#0" expanded="true" />
+            <element signature="e#14777#14778#0" expanded="true" />
+            <element signature="e#14817#14818#0" expanded="true" />
+            <element signature="e#14851#14852#0" expanded="true" />
+            <element signature="e#15034#15035#0" expanded="true" />
+            <element signature="e#15091#15092#0" expanded="true" />
+            <element signature="e#15131#15132#0" expanded="true" />
+            <element signature="e#15167#15168#0" expanded="true" />
+            <element signature="e#15225#15226#0" expanded="true" />
+            <element signature="e#15270#15271#0" expanded="true" />
+            <element signature="e#15319#15320#0" expanded="true" />
+            <element signature="e#15356#15357#0" expanded="true" />
+            <element signature="e#15424#15425#0" expanded="true" />
+            <element signature="e#15476#15477#0" expanded="true" />
           </folding>
         </state>
       </provider>

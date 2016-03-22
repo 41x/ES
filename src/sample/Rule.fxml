@@ -26,13 +26,13 @@
       </Text>
       <HBox prefWidth="200.0">
          <children>
-            <ComboBox minHeight="32.0" prefWidth="1000.0" />
+            <ComboBox fx:id="addRulePremisVarCombo" minHeight="32.0" prefWidth="1000.0" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="=">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <ComboBox minHeight="32.0" prefWidth="1000.0">
+            <ComboBox fx:id="addRulePremisDomValCombo" minHeight="32.0" prefWidth="1000.0">
                <HBox.margin>
                   <Insets right="2.5" />
                </HBox.margin>
@@ -58,7 +58,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
          </VBox.margin>
       </HBox>
-      <TableView fx:id="addVarDomainValTableView" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="addRulePremisesTableView" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
@@ -70,13 +70,13 @@
       </Text>
       <HBox layoutX="15.0" layoutY="179.0" prefWidth="200.0">
          <children>
-            <ComboBox minHeight="32.0" prefWidth="1000.0" />
+            <ComboBox fx:id="addRuleConcVarCombo" minHeight="32.0" prefWidth="1000.0" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="=">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <ComboBox minHeight="32.0" prefWidth="1000.0">
+            <ComboBox fx:id="addRuleConcDomValCombo" minHeight="32.0" prefWidth="1000.0">
                <HBox.margin>
                   <Insets right="2.5" />
                </HBox.margin>
@@ -86,7 +86,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Description">
+      <TextArea fx:id="ruleDescription" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Description">
          <VBox.margin>
             <Insets bottom="15.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
