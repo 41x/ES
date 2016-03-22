@@ -22,8 +22,6 @@ public class VariableController {
     public ComboBox<Domain> domainCombo;
     public TableView<DomainValue> addVarDomainValTableView;
 
-
-
     public void onAdd(ActionEvent actionEvent) {
         Main.getController().onAddDomain();
     }
@@ -77,12 +75,6 @@ public class VariableController {
     public TableView<DomainValue> getAddVarDomainValTableView() {
         return addVarDomainValTableView;
     }
-
-//    public void onDomainSelected(Event event) {
-//        if(getDomainCombo().getSelectionModel().isEmpty()) return;
-//        Main.getController().getVariableController().getAddVarDomainValTableView().setItems(
-//                getDomainCombo().getSelectionModel().getSelectedItem().getValues().getList());
-//    }
 
     private boolean validate() {
         if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {

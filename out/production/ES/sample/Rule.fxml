@@ -7,74 +7,103 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RuleController">
+<VBox prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RuleController">
    <children>
       <TextField fx:id="nameTextField" promptText="Name">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextField>
-      <Text fill="#0000006e" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Type">
-         <VBox.margin>
-            <Insets left="5.0" />
-         </VBox.margin>
-      </Text>
-      <HBox prefWidth="200.0">
-         <children>
-            <RadioButton fx:id="radioInfer" mnemonicParsing="false" text="Inferable">
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-               <toggleGroup>
-                  <ToggleGroup fx:id="one" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="radioRequest" mnemonicParsing="false" text="Request" toggleGroup="$one">
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="radioInfReq" mnemonicParsing="false" text="Infer-request" toggleGroup="$one" />
-         </children>
-      </HBox>
-      <TextArea fx:id="requestTextField" prefHeight="100.0" prefWidth="200.0" promptText="Enter query text">
+      <TextArea fx:id="requestTextField" prefHeight="100.0" prefWidth="200.0" promptText="Reasoning">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextArea>
-      <ComboBox fx:id="domainCombo" prefWidth="1000.0" promptText="Select Domain">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Premises:">
          <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="2.5" left="5.0" top="2.5" />
          </VBox.margin>
-      </ComboBox>
+      </Text>
+      <HBox prefWidth="200.0">
+         <children>
+            <ComboBox minHeight="32.0" prefWidth="1000.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="=">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <ComboBox minHeight="32.0" prefWidth="1000.0">
+               <HBox.margin>
+                  <Insets right="2.5" />
+               </HBox.margin>
+            </ComboBox>
+            <Button mnemonicParsing="false" text="+">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="2.5" right="2.5" />
+               </HBox.margin>
+            </Button>
+            <Button minWidth="39.0" mnemonicParsing="false" text="–">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="2.5" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+         </VBox.margin>
+      </HBox>
       <TableView fx:id="addVarDomainValTableView" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TableView>
-      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onAdd" prefWidth="1000.0" text="Add">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Conclusion:">
+         <VBox.margin>
+            <Insets left="5.0" />
+         </VBox.margin>
+      </Text>
+      <HBox layoutX="15.0" layoutY="179.0" prefWidth="200.0">
+         <children>
+            <ComboBox minHeight="32.0" prefWidth="1000.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="=">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <ComboBox minHeight="32.0" prefWidth="1000.0">
+               <HBox.margin>
+                  <Insets right="2.5" />
+               </HBox.margin>
+            </ComboBox>
+         </children>
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
-      </Button>
-      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onEdit" prefWidth="1000.0" text="Edit">
+      </HBox>
+      <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Description">
          <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="15.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
-      </Button>
+      </TextArea>
       <HBox alignment="TOP_CENTER" prefWidth="200.0">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
          <children>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefWidth="1000.0" text="OK" HBox.hgrow="ALWAYS">
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefHeight="32.0" prefWidth="1000.0" text="OK" HBox.hgrow="ALWAYS">
                <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="5.0" right="5.0" />
                </HBox.margin>
             </Button>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close" HBox.hgrow="ALWAYS">
+            <Button minHeight="32.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close" HBox.hgrow="ALWAYS">
                <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="5.0" left="5.0" />
                </HBox.margin>
             </Button>
          </children>

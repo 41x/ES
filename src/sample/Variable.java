@@ -13,7 +13,7 @@ public class Variable implements Serializable {
     private String question;
     private VarType type;
     private Domain domain;
-    private String value;
+    private DomainValue value;
 
     public Variable(String name, String question, VarType type, Domain domain) {
         setName(name);
@@ -62,11 +62,11 @@ public class Variable implements Serializable {
         this.domain = domain;
     }
 
-    public String getValue() {
+    public DomainValue getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(DomainValue value) {
         this.value = value;
     }
 }
