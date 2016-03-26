@@ -86,11 +86,7 @@ public class VariableController {
             return false;
         }
 
-        if(getDomainCombo().getSelectionModel().isEmpty() && !getRadioRequest().isSelected()) {
-            getDomainCombo().show();
-            return false;
-        }
-        if(!getDomainCombo().getSelectionModel().isEmpty() && getRadioRequest().isSelected()) {
+        if(getDomainCombo().getSelectionModel().isEmpty()) {
             getDomainCombo().show();
             return false;
         }

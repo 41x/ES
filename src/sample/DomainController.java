@@ -46,6 +46,7 @@ public class DomainController {
 
     public void onOK(ActionEvent actionEvent) {
         if (Main.getController().getDomainOperation().equals("add")) {
+            if (!validate()) return;
             if (nameTextField.getText().equalsIgnoreCase("")
                     || tableView.getItems().size() == 0) return;
             Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(), new DomainValues(list));
@@ -55,6 +56,7 @@ public class DomainController {
             tableView.setItems(list);
 
         } else if (Main.getController().getDomainOperation().equals("edit")) {
+            if (!validate()) return;
             Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();
             Domains ds = Main.getShell().getKnowledgeBase().getDomains();
             if (nameTextField.getText().equalsIgnoreCase("")

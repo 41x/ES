@@ -305,17 +305,6 @@ public class Controller {
         getVariableController().getRadioInfer().fire();
         final ToggleGroup group = getVariableController().getRadioInfer().getToggleGroup();
 
-        group.selectedToggleProperty()
-                .addListener((ov, old_toggle, new_toggle) -> {
-                    if (group.getSelectedToggle() != null) {
-                        if (new_toggle==getVariableController().getRadioRequest()){
-                            getVariableController().getDomainCombo().getSelectionModel().clearSelection();
-                            getVariableController().getAddVarDomainValTableView().setItems(null);
-                        }
-                    }
-                });
-
-
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         return stage;
