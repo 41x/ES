@@ -16,7 +16,8 @@ public class Variable implements Serializable {
     private DomainValue value;
 
     public Variable(String name, String question, VarType type, Domain domain) {
-        setName(name);
+//        setName(name);
+        this.name=name;
         this.question = question;
         this.type = type;
         this.domain = domain;
@@ -49,6 +50,11 @@ public class Variable implements Serializable {
 //    public void toSerializable() {
 //    }
 
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 
     public void setQuestion(String question) {
         this.question = question;

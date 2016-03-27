@@ -62,7 +62,7 @@
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </TextArea>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>

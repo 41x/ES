@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
+import java.util.stream.Collectors;
 
 public class Controller {
     final FileChooser fileChooser = new FileChooser();
@@ -158,7 +159,8 @@ public class Controller {
         getRuleController().getAddRulePremisesTableView().getColumns().addAll(numberCol,varname,eq, value);
 
         //configuring combos
-        getRuleController().getAddRulePremisVarCombo().setCellFactory(new Callback<ListView<Variable>,ListCell<Variable>>(){
+        getRuleController().getAddRulePremisVarCombo().setCellFactory(new Callback<ListView<Variable>,
+                ListCell<Variable>>(){
             @Override
             public ListCell<Variable> call(ListView<Variable> p) {
                 return new ListCell<Variable>(){
@@ -238,6 +240,16 @@ public class Controller {
                         getRuleController().getAddRulePremisDomValCombo().setItems(
                                 newValue.getDomain().getValues().getList());
                 });
+//        getRuleController().getAddRuleConcVarCombo().setItems(
+//                Main.getShell().getKnowledgeBase().getVariables().getList()
+//                        .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList()));
+//        // adding listener to combo
+//        getRuleController().getAddRuleConcVarCombo().getSelectionModel().selectedItemProperty()
+//                .addListener((observable, oldValue, newValue) -> {
+//                    if(newValue!=null)
+//                        getRuleController().getAddRuleConcDomValCombo().setItems(
+//                                newValue.getDomain().getValues().getList());
+//                });
 
 
 
@@ -270,13 +282,13 @@ public class Controller {
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
         getVariableController().getAddVarDomainValTableView().getColumns().addAll(numberCol, value);
 
-        getVariableController().getDomainCombo().setCellFactory(new Callback<ListView<Domain>,ListCell<Domain>>(){
+        getVariableController().getDomainCombo().setCellFactory(new Callback<ListView<Domain>
+                ,ListCell<Domain>>(){
 
             @Override
             public ListCell<Domain> call(ListView<Domain> p) {
 
-                final ListCell<Domain> cell = new ListCell<Domain>(){
-
+                return new ListCell<Domain>(){
                     @Override
                     protected void updateItem(Domain t, boolean bln) {
                         super.updateItem(t, bln);
@@ -288,8 +300,6 @@ public class Controller {
                         }
                     }
                 };
-
-                return cell;
             }
         });
 
@@ -297,13 +307,14 @@ public class Controller {
         // adding listener to combo
         getVariableController().getDomainCombo().getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if(newValue!=null)
+                    if(newValue!=null){
                         getVariableController().getAddVarDomainValTableView().setItems(
                                 newValue.getValues().getList());
+                    }
                 });
 
+
         getVariableController().getRadioInfer().fire();
-        final ToggleGroup group = getVariableController().getRadioInfer().getToggleGroup();
 
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);

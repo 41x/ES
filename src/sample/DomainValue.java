@@ -49,5 +49,8 @@ public class DomainValue implements Serializable, Cloneable {
         return serValue;
     }
 
-
+    @Override
+    public String toString() {
+        return getValue();
+    }
 }

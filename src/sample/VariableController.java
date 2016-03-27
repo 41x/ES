@@ -22,6 +22,10 @@ public class VariableController {
     public ComboBox<Domain> domainCombo;
     public TableView<DomainValue> addVarDomainValTableView;
 
+    public void updateCombo(){
+        Main.getController().getVariableController().getDomainCombo().setItems(Main.getShell().getKnowledgeBase().getDomains().getList());
+    }
+
     public void onAdd(ActionEvent actionEvent) {
         Main.getController().onAddDomain();
     }

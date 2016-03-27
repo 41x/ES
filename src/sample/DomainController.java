@@ -46,9 +46,10 @@ public class DomainController {
 
     public void onOK(ActionEvent actionEvent) {
         if (Main.getController().getDomainOperation().equals("add")) {
-            if (!validate()) return;
+            if (!validateOK()) return;
             if (nameTextField.getText().equalsIgnoreCase("")
                     || tableView.getItems().size() == 0) return;
+
             Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(), new DomainValues(list));
             nameTextField.clear();
             valueTextField.clear();
@@ -56,13 +57,15 @@ public class DomainController {
             tableView.setItems(list);
 
         } else if (Main.getController().getDomainOperation().equals("edit")) {
-            if (!validate()) return;
+            if (!validateOK()) return;
             Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();
             Domains ds = Main.getShell().getKnowledgeBase().getDomains();
+
             if (nameTextField.getText().equalsIgnoreCase("")
                     || (!nameTextField.getText().equalsIgnoreCase(selectedDomain.getName())
                     && ds.getList().stream().filter(d -> d.getName()
                     .equalsIgnoreCase(nameTextField.getText())).count() > 0)) return;
+
             selectedDomain.setName(nameTextField.getText());
             selectedDomain.getValues().setList(list);
 
@@ -72,6 +75,9 @@ public class DomainController {
             VariableController varcontr=Main.getController().getVariableController();
             if (varcontr!=null){
                 Domain seld=varcontr.getDomainCombo().getSelectionModel().getSelectedItem();
+                ObservableList<Domain> l=Main.getShell().getKnowledgeBase().getDomains().getList();
+                varcontr.getDomainCombo().setItems(null);
+                varcontr.getDomainCombo().setItems(l);
                 SelectionModel<Domain> sm = varcontr.getDomainCombo().getSelectionModel();
                 sm.clearSelection();
                 sm.select(seld);
@@ -98,6 +104,18 @@ public class DomainController {
             return false;
         }
         if (!valueTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+            valueTextField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateOK() {
+        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+            nameTextField.requestFocus();
+            return false;
+        }
+        if (getTableView().getItems().size()==0) {
             valueTextField.requestFocus();
             return false;
         }
