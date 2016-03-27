@@ -1,21 +1,25 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by alxAsus on 28.02.2016.
  */
 public class Rules implements Serializable, Iterable<Rule>{
-    private ArrayList<Rule> list;
+    private transient ObservableList<Rule> list;
     private KB kb;
     private int count = 0;
+    private List<Rule> serList;
+
 
     public Rules() {
-        this.list = new ArrayList<>();
+        this.list = FXCollections.observableArrayList();
     }
 
     public boolean add(Rule r){
@@ -33,17 +37,15 @@ public class Rules implements Serializable, Iterable<Rule>{
     }
 
     public Rule find(String name){
-        int i=0;
-        while (i<list.size() && !list.get(i).getName().equalsIgnoreCase(name)) i++;
-        if(i==list.size()) return null;
-        return list.get(i);
+        List<Rule> l=getList().stream().filter(x->x.getName().equals(name)).collect(Collectors.toList());
+        return l.size()>0?l.get(0):null;
     }
 
     public void setKb(KB kb) {
         this.kb = kb;
     }
 
-    public ArrayList<Rule> getList() {
+    public ObservableList<Rule> getList() {
         return list;
     }
 
@@ -54,21 +56,32 @@ public class Rules implements Serializable, Iterable<Rule>{
 
     public void toSerializable() {
 //        todo
+        getList().forEach(Rule::toSerializable);
+        setSerList(getList().stream().map(x->x).collect(Collectors.toList()));
     }
 
     public void toWorkingState() {
 //        todo
+        getSerList().forEach(Rule::toWorkingState);
+        setList(FXCollections.observableArrayList(getSerList()));
     }
 
-//    @Override
-//    public boolean hasNext() {
-//        return count < list.size();
-//    }
-//
-//    @Override
-//    public Rule next() {
-//        if (count == list.size()) throw new NoSuchElementException();
-//        count++;
-//        return list.get(count - 1);
-//    }
+    public List<Rule> getSerList() {
+        return serList;
+    }
+
+    public void setSerList(List<Rule> serList) {
+        this.serList = serList;
+    }
+
+    public void setList(ObservableList<Rule> list) {
+        this.list = list;
+    }
+
+    public boolean use(Variable v) {
+        return getList().stream().filter(x->
+                x.getPremises().getList().stream().filter(y->
+                        y.getVariable().equals(v)).findFirst().isPresent()
+                        || x.getConclusion().getVarval().getVariable().equals(v)).findFirst().isPresent();
+    }
 }

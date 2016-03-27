@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -42,22 +43,27 @@
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Edit">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditRule" prefWidth="1000.0" text="Edit">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Delete">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onRuleDelete" prefWidth="1000.0" text="Delete">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <TextArea prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+                                    <TextArea fx:id="ruleContent" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
                                     </TextArea>
-                                    <TextArea layoutX="13.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reasoning:" />
+                                    <TextArea fx:id="reasoningTextArea" prefHeight="200.0" prefWidth="200.0">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
@@ -69,13 +75,7 @@
                                     </Button>
                                  </children>
                               </VBox>
-                              <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" text="Number" />
-                                  <TableColumn prefWidth="75.0" text="Name" />
-                                    <TableColumn prefWidth="75.0" text="Content" />
-                                </columns>
-                              </TableView>
+                              <TableView fx:id="ruleTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
                            </children>
                         </GridPane>
                      </children>

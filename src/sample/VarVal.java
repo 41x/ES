@@ -29,4 +29,9 @@ public class VarVal implements Serializable {
     public DomainValue getDomainValue() {
         return domainValue;
     }
+
+    @Override
+    public VarVal clone(){
+        return new VarVal(getVariable(),getDomainValue());
+    }
 }

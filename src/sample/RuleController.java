@@ -1,7 +1,12 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.util.stream.Collectors;
 
 public class RuleController {
     public TextField nameTextField;
@@ -13,67 +18,88 @@ public class RuleController {
     public ComboBox<DomainValue> addRuleConcDomValCombo;
     public TextArea ruleDescription;
 
+    public void onAddPremis(ActionEvent actionEvent) {
+        if(getAddRulePremisVarCombo().getSelectionModel().isEmpty() ||
+                getAddRulePremisDomValCombo().getSelectionModel().isEmpty()) return;
 
-    public void onAdd(ActionEvent actionEvent) {
-        Main.getController().onAddDomain();
+        VarVal keyVal=new VarVal(getAddRulePremisVarCombo().getSelectionModel().getSelectedItem(),
+                getAddRulePremisDomValCombo().getSelectionModel().getSelectedItem());
+        getAddRulePremisesTableView().getItems().add(keyVal);
+
+        getRuleDescription().setText(getRuleView());
     }
 
     public void onOK(ActionEvent actionEvent) {
 //        todo
-//        if(!validate()) return;
-//
-//        if(Main.getController().getVariableOperation().equals("add")){
-//            Main.getShell().getKnowledgeBase().getVariables().add(
-//                    getNameTextField().getText(),
-//                    requestTextField.getText(),
-//                    radioInfer.isSelected()?VarType.INFER:(radioRequest.isSelected()?VarType.ASK:VarType.INFER_ASK),
-//                    getDomainCombo().getSelectionModel().getSelectedItem()
-//            );
-//        }else if(Main.getController().getVariableOperation().equals("edit")){
-//            if(!validate()) return;
-//            Variable selectedVar=Main.getController().getVarTableView().getSelectionModel().getSelectedItem();
-//            selectedVar.setName(getNameTextField().getText());
-//            selectedVar.setQuestion(getRequestTextField().getText());
-//            selectedVar.setType(getRadioInfer().isSelected()?
-//                    VarType.INFER:(getRadioRequest().isSelected()?VarType.ASK:VarType.INFER_ASK));
-//            selectedVar.setDomain(getDomainCombo().getSelectionModel().getSelectedItem());
-//
-//            Main.getController().getVarTabDomValTableView()
-//                    .setItems(selectedVar.getDomain().getValues().getList());
-//            Main.getController().getReqTextArea()
-//                    .setText(selectedVar.getQuestion());
-//            Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
-//            Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
-//
-//            ((Stage)getNameTextField().getScene().getWindow()).close();
-//        }
+        if(!validate()) return;
+        Conclusion conclusion=new Conclusion(new VarVal(getAddRuleConcVarCombo().getSelectionModel().getSelectedItem(),
+                getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem()));
+        if(Main.getController().getRuleOperation().equals("add")){
+            Rule r=new Rule(nameTextField.getText(),
+                    requestTextField.getText(),getAddRulePremisesTableView().getItems(),conclusion,
+                    Main.getShell().getKnowledgeBase());
+            Main.getShell().getKnowledgeBase().getRules().add(r);
+
+            getNameTextField().clear();
+            getRequestTextField().clear();
+            getAddRulePremisVarCombo().getSelectionModel().clearSelection();
+            getAddRuleConcVarCombo().getSelectionModel().clearSelection();
+            getAddRulePremisDomValCombo().getSelectionModel().clearSelection();
+            getAddRuleConcDomValCombo().getSelectionModel().clearSelection();
+            ObservableList<VarVal> list=FXCollections.observableArrayList();
+            getAddRulePremisesTableView().setItems(list);
+            getRuleDescription().clear();
+            getNameTextField().requestFocus();
+        }else if(Main.getController().getRuleOperation().equals("edit")){
+            Rule selRule=Main.getController().getRuleTableView().getSelectionModel().getSelectedItem();
+            selRule.setName(getNameTextField().getText());
+            selRule.setReasoning(getRequestTextField().getText());
+            selRule.getPremises().setList(getAddRulePremisesTableView().getItems());
+
+            selRule.getConclusion().setVarval(new VarVal(getAddRuleConcVarCombo().getSelectionModel()
+                    .getSelectedItem(),getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem()));
+
+            Main.getController().getRuleContent().setText(selRule.getRuleView());
+            Main.getController().getReasoningTextArea().setText(selRule.getReasoning());
+
+            Main.getController().getRuleTableView().getColumns().get(0).setVisible(false);
+            Main.getController().getRuleTableView().getColumns().get(0).setVisible(true);
+
+            ((Stage)getNameTextField().getScene().getWindow()).close();
+        }
     }
 
     public void onCancel(ActionEvent actionEvent) {
-//        ((Stage)getDomainCombo().getScene().getWindow()).close();
+        ((Stage)getNameTextField().getScene().getWindow()).close();
     }
 
-
-    public void onEdit(ActionEvent actionEvent) {
-//        if(getDomainCombo().getSelectionModel().isEmpty()) return;
-//        Main.getController().getDomainTableView().getSelectionModel().select(
-//                getDomainCombo().getSelectionModel().getSelectedItem());
-//        Main.getController().onEditDomain();
-    }
 
     private boolean validate() {
-//        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
-//            getNameTextField().requestFocus();
-//            return false;
-//        }
-//        if (getRequestTextField().getText().trim().equals("")) {
-//            getRequestTextField().requestFocus();
-//            return false;
-//        }
-//        if(getDomainCombo().getSelectionModel().isEmpty()) {
-//            getDomainCombo().show();
-//            return false;
-//        }
+        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+            getNameTextField().requestFocus();
+            return false;
+        }
+        if (getRequestTextField().getText().trim().equals("")) {
+            getRequestTextField().requestFocus();
+            return false;
+        }
+        if(getAddRulePremisesTableView().getItems().size()==0) {
+            if(getAddRulePremisVarCombo().getSelectionModel().isEmpty())
+                getAddRulePremisVarCombo().show();
+            else
+                getAddRulePremisDomValCombo().show();
+            return false;
+        }
+        if(getAddRuleConcVarCombo().getSelectionModel().isEmpty()) {
+            getAddRuleConcVarCombo().show();
+            return false;
+        }
+        if(getAddRuleConcDomValCombo().getSelectionModel().isEmpty()) {
+            getAddRuleConcDomValCombo().show();
+            return false;
+        }
+
+
         return true;
     }
 
@@ -122,5 +148,26 @@ public class RuleController {
 
     public TextArea getRuleDescription() {
         return ruleDescription;
+    }
+
+
+    public void onDelPremis(ActionEvent actionEvent) {
+        if(getAddRulePremisesTableView().getSelectionModel().isEmpty()) return;
+        getAddRulePremisesTableView().getItems().remove(
+                getAddRulePremisesTableView().getSelectionModel().getSelectedItem());
+
+        getRuleDescription().setText(getRuleView());
+    }
+
+    public String getRuleView(){
+        String res="IF\n ";
+        String preises=getAddRulePremisesTableView().getItems().stream().map(x->x.varname()+"="+x.varvalue()).collect(Collectors.joining(",\n "));
+
+        String concl=getAddRuleConcVarCombo().getSelectionModel().isEmpty()
+                ?""
+                :"\nTHEN\n "+getAddRuleConcVarCombo().getSelectionModel().getSelectedItem().getName()+"="+
+                getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem().getValue();
+
+        return res+preises+concl;
     }
 }

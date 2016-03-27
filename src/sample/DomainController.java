@@ -55,7 +55,7 @@ public class DomainController {
             valueTextField.clear();
             list = FXCollections.observableArrayList();
             tableView.setItems(list);
-
+            nameTextField.requestFocus();
         } else if (Main.getController().getDomainOperation().equals("edit")) {
             if (!validateOK()) return;
             Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();

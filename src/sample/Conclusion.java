@@ -15,4 +15,8 @@ public class Conclusion implements Serializable {
     public VarVal getVarval() {
         return varval;
     }
+
+    public void setVarval(VarVal varval) {
+        this.varval = varval;
+    }
 }

@@ -55,6 +55,7 @@ public class Main extends Application {
 
         buildDomainsTable();
         buildVariablesTable();
+        buildRulesTable();
 
         shell=new Shell(new MyLIM());
         boolean kbisset=false;
@@ -67,6 +68,30 @@ public class Main extends Application {
         stage.show();
 
 
+    }
+
+    private void buildRulesTable(){
+        getController().getRuleTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<Rule,Integer> numberCol = new TableColumn<>("#");
+        numberCol.setPrefWidth(50);
+        numberCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(
+                getController().getRuleTableView().getItems().indexOf(p.getValue()) + 1));
+        numberCol.setSortable(false);
+
+        TableColumn<Rule, String> value= new TableColumn<>("Name");
+        value.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        getController().getRuleTableView().getColumns().addAll(numberCol,value);
+
+        getController().getRuleTableView().getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldSelection, newSelection) -> {
+                    if (newSelection != null) {
+                        Rule selRule=getController().getRuleTableView().getSelectionModel().getSelectedItem();
+                        getController().getRuleContent().setText(selRule.getRuleView());
+                        getController().getReasoningTextArea().setText(selRule.getReasoning());
+                    }
+                });
     }
 
 

@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -24,6 +26,9 @@ public class Controller {
     public TableView<Variable> varTableView;
     public TableView<DomainValue> varTabDomValTableView;
     public TextArea reqTextArea;
+    public TextArea ruleContent;
+    public TableView<Rule> ruleTableView;
+    public TextArea reasoningTextArea;
 
     private DomainController domainController;
     private String domainOperation;
@@ -77,6 +82,11 @@ public class Controller {
         setDomainOperation("edit");
         Stage domainStage = domainStageFactory();
         Domain selectedDomain = getDomainTableView().getSelectionModel().getSelectedItem();
+        if (Main.getShell().getKnowledgeBase().getVariables().useDomain(selectedDomain)){
+            System.out.println("The domain is used in variables");
+            return;
+        }
+
         getDomainController().nameTextField.setText(selectedDomain.getName());
 
         ObservableList<DomainValue> data = selectedDomain.getValues().getListCopy();
@@ -110,6 +120,11 @@ public class Controller {
         Stage varStage = variableStageFactory();
 
         Variable selectedVar=getVarTableView().getSelectionModel().getSelectedItem();
+        if(Main.getShell().getKnowledgeBase().getRules().use(selectedVar)){
+            System.out.println("The variable is used in rules");
+            return;
+        }
+
         getVariableController().getNameTextField().setText(selectedVar.getName());
         getVariableController().getRadioInfer().setSelected(selectedVar.getType()==VarType.INFER);
         getVariableController().getRadioRequest().setSelected(selectedVar.getType()==VarType.ASK);
@@ -124,8 +139,33 @@ public class Controller {
         setRuleOperation("add");
         Stage varStage = ruleStageFactory();
 
+        ObservableList<VarVal> list=FXCollections.observableArrayList();
+        getRuleController().getAddRulePremisesTableView().setItems(list);
+
         if (varStage != null)
             varStage.show();
+    }
+
+    public void onEditRule(ActionEvent actionEvent) {
+        if(getRuleTableView().getSelectionModel().isEmpty()) return;
+        Rule selRule=getRuleTableView().getSelectionModel().getSelectedItem();
+        setRuleOperation("edit");
+        Stage varStage = ruleStageFactory();
+
+        List<VarVal> list=selRule.getPremises().getList().stream().map(VarVal::clone).collect(Collectors.toList());
+        getRuleController().getAddRulePremisesTableView().setItems(FXCollections.observableArrayList(list));
+
+        getRuleController().getNameTextField().setText(selRule.getName());
+        getRuleController().getRequestTextField().setText(selRule.getReasoning());
+
+        getRuleController().getAddRuleConcVarCombo().getSelectionModel().select(
+                selRule.getConclusion().getVarval().getVariable());
+        getRuleController().getAddRuleConcDomValCombo().getSelectionModel().select(
+                selRule.getConclusion().getVarval().getDomainValue());
+
+        if (varStage != null)
+            varStage.show();
+
     }
 
     private Stage ruleStageFactory() {
@@ -141,6 +181,7 @@ public class Controller {
         }
         setRuleController(loader.getController());
 //        premises table
+//        getRuleController().getAddRulePremisesTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<VarVal,String> numberCol = new TableColumn<>("#");
         numberCol.setPrefWidth(50);
         numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(Integer.toString(getRuleController()
@@ -240,16 +281,25 @@ public class Controller {
                         getRuleController().getAddRulePremisDomValCombo().setItems(
                                 newValue.getDomain().getValues().getList());
                 });
-//        getRuleController().getAddRuleConcVarCombo().setItems(
-//                Main.getShell().getKnowledgeBase().getVariables().getList()
-//                        .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList()));
-//        // adding listener to combo
-//        getRuleController().getAddRuleConcVarCombo().getSelectionModel().selectedItemProperty()
-//                .addListener((observable, oldValue, newValue) -> {
-//                    if(newValue!=null)
-//                        getRuleController().getAddRuleConcDomValCombo().setItems(
-//                                newValue.getDomain().getValues().getList());
-//                });
+
+        List<Variable> filteredList=Main.getShell().getKnowledgeBase().getVariables().getList()
+                .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList());
+        getRuleController().getAddRuleConcVarCombo().setItems(FXCollections.observableArrayList(filteredList));
+
+        // adding listener to combo
+        getRuleController().getAddRuleConcVarCombo().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if(newValue!=null)
+                        getRuleController().getAddRuleConcDomValCombo().setItems(
+                                newValue.getDomain().getValues().getList());
+                });
+
+        // adding listener to combo
+        getRuleController().getAddRuleConcDomValCombo().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if(newValue!=null)
+                        getRuleController().getRuleDescription().setText(getRuleController().getRuleView());
+                });
 
 
 
@@ -425,5 +475,30 @@ public class Controller {
 
     public void setRuleController(RuleController ruleController) {
         this.ruleController = ruleController;
+    }
+
+    public TextArea getRuleContent() {
+        return ruleContent;
+    }
+
+    public void setRuleContent(TextArea ruleContent) {
+        this.ruleContent = ruleContent;
+    }
+
+    public TableView<Rule> getRuleTableView() {
+        return ruleTableView;
+    }
+
+    public void setRuleTableView(TableView ruleTableView) {
+        this.ruleTableView = ruleTableView;
+    }
+
+    public TextArea getReasoningTextArea() {
+        return reasoningTextArea;
+    }
+
+    public void onRuleDelete(ActionEvent actionEvent) {
+        Main.getShell().getKnowledgeBase().getRules()
+                .remove(getRuleTableView().getSelectionModel().getSelectedItem().getName());
     }
 }

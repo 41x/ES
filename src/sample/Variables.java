@@ -32,7 +32,14 @@ public class Variables implements Serializable{
     }
 
     public boolean remove(Variable v){
+        if(kb.getRules().use(v)){
+            System.out.println("The variable is used in rules");
+            return false;
+        }
         return getList().remove(v);
+
+
+
     }
 
     public boolean useDomain(Domain d) {

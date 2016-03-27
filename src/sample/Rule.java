@@ -1,7 +1,10 @@
 package sample;
 
+import javafx.collections.ObservableList;
+
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
  * Created by ваа on 02.03.2016.
@@ -13,11 +16,12 @@ public class Rule implements Serializable, Comparable<Rule> {
     private Premises premises;
     private KB kb;
 
-    public Rule(String name, String reasoning) {
+    public Rule(String name, String reasoning, ObservableList<VarVal> premisesList,Conclusion conclusion,KB kb) {
+        this.kb=kb;
         this.name = name;
         this.reasoning = reasoning;
         this.conclusion = conclusion;
-        this.premises = new Premises();
+        this.premises = new Premises(premisesList);
         premises.setVariables(kb.getVariables());
 
     }
@@ -57,7 +61,26 @@ public class Rule implements Serializable, Comparable<Rule> {
     }
 
     public void toSerializable() {
-//        todo
+        getPremises().toSerializable();
     }
 
+    public void toWorkingState(){
+        getPremises().toWorkingState();
+    }
+
+    public String getRuleView(){
+        String res="IF\n ";
+        String premises=getPremises().getList().stream().map(x->x.varname()+"="+x.varvalue()).collect(Collectors.joining(",\n "));
+
+        String concl="\nTHEN\n "+getConclusion().getVarval().varname()+"="+getConclusion().getVarval().varvalue();
+        return res+premises+concl;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setReasoning(String reasoning) {
+        this.reasoning = reasoning;
+    }
 }

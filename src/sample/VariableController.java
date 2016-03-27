@@ -31,7 +31,6 @@ public class VariableController {
     }
 
     public void onOK(ActionEvent actionEvent) {
-//        todo
         if(!validate()) return;
 
         if(Main.getController().getVariableOperation().equals("add")){
@@ -41,6 +40,10 @@ public class VariableController {
                     radioInfer.isSelected()?VarType.INFER:(radioRequest.isSelected()?VarType.ASK:VarType.INFER_ASK),
                     getDomainCombo().getSelectionModel().getSelectedItem()
             );
+            getNameTextField().clear();
+            getRequestTextField().clear();
+            getDomainCombo().getSelectionModel().clearSelection();
+            getNameTextField().requestFocus();
         }else if(Main.getController().getVariableOperation().equals("edit")){
             if(!validate()) return;
             Variable selectedVar=Main.getController().getVarTableView().getSelectionModel().getSelectedItem();
