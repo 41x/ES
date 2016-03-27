@@ -501,4 +501,8 @@ public class Controller {
         Main.getShell().getKnowledgeBase().getRules()
                 .remove(getRuleTableView().getSelectionModel().getSelectedItem().getName());
     }
+
+    public void NewKB(ActionEvent actionEvent) {
+
+    }
 }
