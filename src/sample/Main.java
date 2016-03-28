@@ -187,9 +187,8 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static DomainValue ask(Variable var) {
-//        getController().
-
+    public static String ask(Variable var) throws InterruptedException {
+        getController().askVar(var);
 
 //        todo
         return null;

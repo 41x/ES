@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,6 +20,8 @@ import javafx.util.Callback;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -45,6 +48,8 @@ public class Controller {
     private RuleController ruleController;
     private String RuleOperation;
 
+    private final Semaphore sem  = new Semaphore(0, true);
+    private String answer;
 
     public void NewKB(ActionEvent actionEvent) {
         Main.setShell(new Shell(new MyLIM()));
@@ -537,18 +542,69 @@ public class Controller {
     }
 
     public void onStopCons(ActionEvent actionEvent) {
-//        todo
+        setAnswer("");
+        getSem().release();
     }
 
     public void onConfirm(ActionEvent actionEvent) {
-//        todo
+        int i=0;
+        List<Node> l=getAnswerList().getChildren();
+        while (i<l.size() && !((RadioButton)l.get(i)).isSelected()) i++;
+        setAnswer(i==l.size()?"":((RadioButton)l.get(i)).getText());
+
+        getSem().release();
     }
 
-    public void onStartCons(ActionEvent actionEvent) {
+    public void onStartCons(ActionEvent actionEvent) throws InterruptedException {
         if(getConsVarCombo().getSelectionModel().isEmpty()) return;
-
-
+        Variable selVar=getConsVarCombo().getSelectionModel().getSelectedItem();
+        getConsTabQuestionTextArea().setText(Main.getShell().startCons(selVar,getConsTabLogTextArea()));
 
 //        todo
     }
+
+    public String askVar(Variable var) throws InterruptedException {
+        getConsTabQuestionTextArea().setText(var.getQuestion());
+        getAnswerList().getChildren().clear();
+        ToggleGroup group = new ToggleGroup();
+        var.getDomain().getValues().getList().forEach(x->{
+            RadioButton rb=new RadioButton(x.getValue());
+            rb.setToggleGroup(group);
+            getAnswerList().getChildren().add(rb);
+            rb.setSelected(true);
+        });
+
+        getSem().acquire();
+        return getAnswer();
+    }
+
+    public TextArea getConsTabLogTextArea() {
+        return consTabLogTextArea;
+    }
+
+    public void setConsTabLogTextArea(TextArea consTabLogTextArea) {
+        this.consTabLogTextArea = consTabLogTextArea;
+    }
+
+    public TextArea getConsTabQuestionTextArea() {
+        return consTabQuestionTextArea;
+    }
+
+    public void setConsTabQuestionTextArea(TextArea consTabQuestionTextArea) {
+        this.consTabQuestionTextArea = consTabQuestionTextArea;
+    }
+
+    public Semaphore getSem() {
+        return sem;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+
 }

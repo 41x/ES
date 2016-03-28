@@ -9,6 +9,10 @@ import java.util.StringJoiner;
 public class Facts {
     private HashMap<String,String> facts;
 
+    public Facts() {
+        this.facts = new HashMap<>();
+    }
+
     public String getFact(String variable){
         return facts.getOrDefault(variable,"");
     }

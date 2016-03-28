@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.control.TextArea;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -14,11 +16,11 @@ public class Shell {
     private KB knowledgeBase;
 
     public Shell(Ilim lim) {
-        memory=new WMemory();
-        setKB((new KBFactory()).make());
-        ((MyLIM)lim).setMemory(memory);
-        ((MyLIM)lim).setKb(knowledgeBase);
         this.lim = lim;
+        memory=new WMemory();
+        ((MyLIM)lim).setMemory(memory);
+        setKB((new KBFactory()).make());
+//        ((MyLIM)lim).setKb(knowledgeBase);
     }
 
     private KB deser(String path){
@@ -78,6 +80,7 @@ public class Shell {
 
     public boolean setKB(KB kb) {
         this.knowledgeBase = kb;
+        ((MyLIM)getLim()).setKb(kb);
         Main.getController().getDomainTableView().setItems(getKnowledgeBase().getDomains().getList());
         Main.getController().getVarTableView().setItems(getKnowledgeBase().getVariables().getList());
         Main.getController().getRuleTableView().setItems(getKnowledgeBase().getRules().getList());
@@ -90,7 +93,22 @@ public class Shell {
         return knowledgeBase;
     }
 
-    public DomainValue ask(Variable var) {
+    public String ask(Variable var) throws InterruptedException {
         return Main.ask(var);
+    }
+
+    public Ilim getLim() {
+        return lim;
+    }
+
+    public WMemory getMemory() {
+        return memory;
+    }
+
+    public String startCons(Variable v, TextArea logW) throws InterruptedException {
+        getLim().infer(v,logW,"");
+        String res=getMemory().getFact(v.getName());
+        return res.equals("")?String.format("Given the information, value of the variable %s is unknown :(",v.getName())
+                :res;
     }
 }
