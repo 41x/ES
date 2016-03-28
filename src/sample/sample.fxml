@@ -189,53 +189,56 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Consultation">
+            <Tab onSelectionChanged="#onConsultTab" text="Consultation">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox alignment="TOP_CENTER" maxWidth="250.0" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                                  <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" prefWidth="1000.0" text="Add">
+                                    <ComboBox fx:id="consVarCombo" prefWidth="1000.0">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
-                                    </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Edit">
+                                    </ComboBox>
+                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onStartCons" prefWidth="1000.0" text="Start consultation">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Delete">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onStopCons" prefWidth="1000.0" text="Stop consultation">
+                                       <VBox.margin>
+                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <VBox fx:id="answerList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onConfirm" prefWidth="1000.0" text="Confirm">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <TextArea prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </TextArea>
-                                    <TextArea layoutX="13.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </TextArea>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
                                  </children>
                               </VBox>
-                              <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2">
-                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="Number" />
-                                    <TableColumn prefWidth="75.0" text="Name" />
-                                    <TableColumn prefWidth="75.0" text="Content" />
-                                 </columns>
-                              </TableView>
+                              <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+                                 <children>
+                                    <TextArea fx:id="consTabQuestionTextArea" prefHeight="200.0" prefWidth="200.0" promptText="question" VBox.vgrow="ALWAYS">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="2.5" top="5.0" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                    <TextArea fx:id="consTabLogTextArea" prefHeight="100.0" prefWidth="200.0" promptText="log">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="2.5" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                 </children>
+                              </VBox>
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />

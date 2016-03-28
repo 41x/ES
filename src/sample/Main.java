@@ -187,12 +187,19 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static String ask() {
+    public static DomainValue ask(Variable var) {
+//        getController().
+
+
 //        todo
         return null;
     }
 
     public static Controller getController() {
         return controller;
+    }
+
+    public static void setShell(Shell shell) {
+        Main.shell = shell;
     }
 }

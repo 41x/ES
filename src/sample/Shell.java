@@ -40,7 +40,7 @@ public class Shell {
         }
     }
 
-    public void ser(String path){
+    public boolean ser(String path){
         if(!path.matches(".*\\.kb$"))
             path+=".kb";
 
@@ -56,7 +56,9 @@ public class Shell {
             System.out.println(String.format("Could not serialize %s",path));
 //            i.printStackTrace();
             System.out.println(i.getMessage());
+            return false;
         }
+        return true;
     }
 
 
@@ -88,7 +90,7 @@ public class Shell {
         return knowledgeBase;
     }
 
-    public String ask(String question) {
-        return Main.ask();
+    public DomainValue ask(Variable var) {
+        return Main.ask(var);
     }
 }

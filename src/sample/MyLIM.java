@@ -17,7 +17,7 @@ public class MyLIM implements Ilim {
     public void infer(Variable var) {
         // if type is ask
         if (var.getType().equals(VarType.ASK)){
-            memory.addFact(var.getName(),Main.getShell().ask(var.getQuestion()));
+            memory.addFact(var.getName(),Main.getShell().ask(var).getValue());
             return;
         }
 
@@ -32,7 +32,7 @@ public class MyLIM implements Ilim {
 
         // if type is infer-ask and still no value then ask
         if (var.getType().equals(VarType.INFER_ASK) && memory.getFact(var.getName()).equalsIgnoreCase("")){
-            memory.addFact(var.getName(),Main.getShell().ask(var.getQuestion()));
+            memory.addFact(var.getName(),Main.getShell().ask(var).getValue());
         }
     }
 

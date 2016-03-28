@@ -4,11 +4,13 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +31,10 @@ public class Controller {
     public TextArea ruleContent;
     public TableView<Rule> ruleTableView;
     public TextArea reasoningTextArea;
+    public ComboBox<Variable> consVarCombo;
+    public VBox answerList;
+    public TextArea consTabLogTextArea;
+    public TextArea consTabQuestionTextArea;
 
     private DomainController domainController;
     private String domainOperation;
@@ -39,6 +45,12 @@ public class Controller {
     private RuleController ruleController;
     private String RuleOperation;
 
+
+    public void NewKB(ActionEvent actionEvent) {
+        Main.setShell(new Shell(new MyLIM()));
+        Main.getStage().setTitle(Main.getShell().getKnowledgeBase().getName());
+
+    }
 
     public void OpenKB(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(Main.getStage());
@@ -57,8 +69,16 @@ public class Controller {
 
     public void SaveKBas(ActionEvent actionEvent) {
         File file = fileChooser.showSaveDialog(Main.getStage());
-        if (file != null) {
-            Main.getShell().ser(file.getPath());
+        if (file == null || !Main.getShell().ser(file.getPath())) return;
+
+        String filename=file.getPath();
+        if(!filename.matches(".*\\.kb$")) filename+=".kb";
+        try{
+            PrintWriter writer = new PrintWriter("lastKB", "UTF-8");
+            writer.print(filename);
+            writer.close();
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -502,7 +522,33 @@ public class Controller {
                 .remove(getRuleTableView().getSelectionModel().getSelectedItem().getName());
     }
 
-    public void NewKB(ActionEvent actionEvent) {
+    public ComboBox<Variable> getConsVarCombo() {
+        return consVarCombo;
+    }
 
+    public VBox getAnswerList() {
+        return answerList;
+    }
+
+    public void onConsultTab(Event event) {
+        List<Variable> l=Main.getShell().getKnowledgeBase().getVariables().getList()
+                .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList());
+        getConsVarCombo().setItems(FXCollections.observableArrayList(l));
+    }
+
+    public void onStopCons(ActionEvent actionEvent) {
+//        todo
+    }
+
+    public void onConfirm(ActionEvent actionEvent) {
+//        todo
+    }
+
+    public void onStartCons(ActionEvent actionEvent) {
+        if(getConsVarCombo().getSelectionModel().isEmpty()) return;
+
+
+
+//        todo
     }
 }
