@@ -12,15 +12,12 @@ import java.io.ObjectOutputStream;
  */
 public class Shell {
     private WMemory memory;
-    private Ilim lim;
+//    private MyLIM lim;
     private KB knowledgeBase;
 
-    public Shell(Ilim lim) {
-        this.lim = lim;
+    public Shell() {
         memory=new WMemory();
-        ((MyLIM)lim).setMemory(memory);
         setKB((new KBFactory()).make());
-//        ((MyLIM)lim).setKb(knowledgeBase);
     }
 
     private KB deser(String path){
@@ -63,12 +60,6 @@ public class Shell {
         return true;
     }
 
-
-
-    public void setLim(Ilim lim) {
-        this.lim = lim;
-    }
-
     public boolean setKnowledgeBase(String path) {
         KB kb=deser(path);
         if (kb==null){
@@ -80,7 +71,6 @@ public class Shell {
 
     public boolean setKB(KB kb) {
         this.knowledgeBase = kb;
-        ((MyLIM)getLim()).setKb(kb);
         Main.getController().getDomainTableView().setItems(getKnowledgeBase().getDomains().getList());
         Main.getController().getVarTableView().setItems(getKnowledgeBase().getVariables().getList());
         Main.getController().getRuleTableView().setItems(getKnowledgeBase().getRules().getList());
@@ -93,22 +83,17 @@ public class Shell {
         return knowledgeBase;
     }
 
-    public String ask(Variable var) throws InterruptedException {
-        return Main.ask(var);
-    }
-
-    public Ilim getLim() {
-        return lim;
-    }
+//    public String ask(Variable var) throws InterruptedException {
+//        return Main.ask(var);
+//    }
 
     public WMemory getMemory() {
         return memory;
     }
 
-    public String startCons(Variable v, TextArea logW) throws InterruptedException {
-        getLim().infer(v,logW,"");
-        String res=getMemory().getFact(v.getName());
-        return res.equals("")?String.format("Given the information, value of the variable %s is unknown :(",v.getName())
-                :res;
+    public void startCons(Variable v) throws InterruptedException {
+        Runnable lim=new MyLIM(memory.clear(),knowledgeBase,v);
+        new Thread(lim).start();
     }
+
 }

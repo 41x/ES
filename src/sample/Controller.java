@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,6 +39,9 @@ public class Controller {
     public VBox answerList;
     public TextArea consTabLogTextArea;
     public TextArea consTabQuestionTextArea;
+    public Button confirmButton;
+    public Button stopConsButton;
+    public Button startConsButton;
 
     private DomainController domainController;
     private String domainOperation;
@@ -48,11 +52,11 @@ public class Controller {
     private RuleController ruleController;
     private String RuleOperation;
 
-    private final Semaphore sem  = new Semaphore(0, true);
-    private String answer;
+    private Semaphore sem=null;
+    private String answer="?";
 
     public void NewKB(ActionEvent actionEvent) {
-        Main.setShell(new Shell(new MyLIM()));
+        Main.setShell(new Shell());
         Main.getStage().setTitle(Main.getShell().getKnowledgeBase().getName());
 
     }
@@ -536,46 +540,70 @@ public class Controller {
     }
 
     public void onConsultTab(Event event) {
+        getConfirmButton().setDisable(true);
+        getStopConsButton().setDisable(true);
+
         List<Variable> l=Main.getShell().getKnowledgeBase().getVariables().getList()
                 .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList());
         getConsVarCombo().setItems(FXCollections.observableArrayList(l));
     }
 
     public void onStopCons(ActionEvent actionEvent) {
-        setAnswer("");
+        setAnswer("?");
         getSem().release();
+        getStartConsButton().setDisable(false);
+        getStopConsButton().setDisable(true);
+        getConfirmButton().setDisable(true);
     }
 
     public void onConfirm(ActionEvent actionEvent) {
+        getConfirmButton().setDisable(true);
         int i=0;
         List<Node> l=getAnswerList().getChildren();
         while (i<l.size() && !((RadioButton)l.get(i)).isSelected()) i++;
         setAnswer(i==l.size()?"":((RadioButton)l.get(i)).getText());
-
         getSem().release();
     }
 
     public void onStartCons(ActionEvent actionEvent) throws InterruptedException {
+        getConsTabLogTextArea().clear();
         if(getConsVarCombo().getSelectionModel().isEmpty()) return;
+        getStopConsButton().setDisable(false);
+        getStartConsButton().setDisable(true);
         Variable selVar=getConsVarCombo().getSelectionModel().getSelectedItem();
-        getConsTabQuestionTextArea().setText(Main.getShell().startCons(selVar,getConsTabLogTextArea()));
-
-//        todo
+        setSem(new Semaphore(0, true));
+        Main.getShell().startCons(selVar);
     }
 
     public String askVar(Variable var) throws InterruptedException {
-        getConsTabQuestionTextArea().setText(var.getQuestion());
-        getAnswerList().getChildren().clear();
-        ToggleGroup group = new ToggleGroup();
-        var.getDomain().getValues().getList().forEach(x->{
-            RadioButton rb=new RadioButton(x.getValue());
-            rb.setToggleGroup(group);
-            getAnswerList().getChildren().add(rb);
-            rb.setSelected(true);
+
+        Platform.runLater(() -> {
+            getConsTabQuestionTextArea().setText(var.getQuestion());
+            getAnswerList().getChildren().clear();
+            ToggleGroup group = new ToggleGroup();
+            var.getDomain().getValues().getList().forEach(x->{
+                RadioButton rb=new RadioButton(x.getValue());
+                rb.setToggleGroup(group);
+                getAnswerList().getChildren().add(rb);
+                rb.setSelected(true);
+            });
+            getConfirmButton().setDisable(false);
         });
 
+
         getSem().acquire();
-        return getAnswer();
+        String res=getAnswer();
+//        System.out.println(String.format("im thread answer is %s, go",res));
+        return res;
+
+    }
+
+    public void resetCons(){
+        getStartConsButton().setDisable(false);
+        getStopConsButton().setDisable(true);
+        getConfirmButton().setDisable(true);
+        getAnswerList().getChildren().clear();
+
     }
 
     public TextArea getConsTabLogTextArea() {
@@ -606,5 +634,24 @@ public class Controller {
         this.answer = answer;
     }
 
+    public Button getConfirmButton() {
+        return confirmButton;
+    }
 
+    public Button getStopConsButton() {
+        return stopConsButton;
+    }
+
+    public void setSem(Semaphore sem) {
+        this.sem = sem;
+    }
+
+    public Button getStartConsButton() {
+        return startConsButton;
+    }
+
+    public void CloseCons(ActionEvent actionEvent) {
+        getSem().release();
+        Main.getStage().close();
+    }
 }

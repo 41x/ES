@@ -59,7 +59,7 @@ public class RuleController {
             selRule.getConclusion().setVarval(new VarVal(getAddRuleConcVarCombo().getSelectionModel()
                     .getSelectedItem(),getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem()));
 
-            Main.getController().getRuleContent().setText(selRule.getRuleView());
+            Main.getController().getRuleContent().setText(selRule.getRuleView(""));
             Main.getController().getReasoningTextArea().setText(selRule.getReasoning());
 
             Main.getController().getRuleTableView().getColumns().get(0).setVisible(false);

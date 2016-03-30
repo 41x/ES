@@ -21,7 +21,9 @@ public class Facts {
         facts.put(var,val);
     }
 
-
+    public void clear(){
+        facts.clear();
+    }
 
 
 }

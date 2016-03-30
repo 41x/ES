@@ -68,11 +68,11 @@ public class Rule implements Serializable, Comparable<Rule> {
         getPremises().toWorkingState();
     }
 
-    public String getRuleView(){
-        String res="IF\n ";
-        String premises=getPremises().getList().stream().map(x->x.varname()+"="+x.varvalue()).collect(Collectors.joining(",\n "));
+    public String getRuleView(String indent){
+        String res="IF\n "+indent;
+        String premises=getPremises().getList().stream().map(x->x.varname()+"="+x.varvalue()).collect(Collectors.joining(",\n "+indent));
 
-        String concl="\nTHEN\n "+getConclusion().getVarval().varname()+"="+getConclusion().getVarval().varvalue();
+        String concl="\n"+indent+"THEN\n "+indent+getConclusion().getVarval().varname()+"="+getConclusion().getVarval().varvalue();
         return res+premises+concl;
     }
 

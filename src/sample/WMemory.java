@@ -18,4 +18,8 @@ public class WMemory {
         facts.addFact(var,val);
     }
 
+    public WMemory clear(){
+        facts.clear();
+        return this;
+    }
 }

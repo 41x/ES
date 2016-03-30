@@ -195,30 +195,30 @@
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" maxWidth="250.0" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                                  <children>
                                     <ComboBox fx:id="consVarCombo" prefWidth="1000.0">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </ComboBox>
-                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onStartCons" prefWidth="1000.0" text="Start consultation">
+                                    <Button fx:id="startConsButton" minWidth="149.0" mnemonicParsing="false" onAction="#onStartCons" prefWidth="1000.0" text="Start consultation">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onStopCons" prefWidth="1000.0" text="Stop consultation">
+                                    <Button fx:id="stopConsButton" minWidth="150.0" mnemonicParsing="false" onAction="#onStopCons" prefWidth="1000.0" text="Stop consultation">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <VBox fx:id="answerList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onConfirm" prefWidth="1000.0" text="Confirm">
+                                    <VBox fx:id="answerList" prefHeight="200.0" prefWidth="1000.0" VBox.vgrow="ALWAYS" />
+                                    <Button fx:id="confirmButton" minWidth="150.0" mnemonicParsing="false" onAction="#onConfirm" prefWidth="1000.0" text="Confirm">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#CloseCons" prefWidth="1000.0" text="Close">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
@@ -232,7 +232,7 @@
                                           <Insets bottom="5.0" left="5.0" right="2.5" top="5.0" />
                                        </VBox.margin>
                                     </TextArea>
-                                    <TextArea fx:id="consTabLogTextArea" prefHeight="100.0" prefWidth="200.0" promptText="log">
+                                    <TextArea fx:id="consTabLogTextArea" prefHeight="100.0" prefWidth="200.0" promptText="log" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="2.5" />
                                        </VBox.margin>
@@ -243,7 +243,7 @@
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="50.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

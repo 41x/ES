@@ -57,7 +57,7 @@ public class Main extends Application {
         buildVariablesTable();
         buildRulesTable();
 
-        shell=new Shell(new MyLIM());
+        shell=new Shell();
         boolean kbisset=false;
         if (kbPath!=null)
             kbisset=shell.setKnowledgeBase(kbPath);
@@ -88,7 +88,7 @@ public class Main extends Application {
                 .addListener((obs, oldSelection, newSelection) -> {
                     if (newSelection != null) {
                         Rule selRule=getController().getRuleTableView().getSelectionModel().getSelectedItem();
-                        getController().getRuleContent().setText(selRule.getRuleView());
+                        getController().getRuleContent().setText(selRule.getRuleView(""));
                         getController().getReasoningTextArea().setText(selRule.getReasoning());
                     }
                 });
@@ -187,12 +187,9 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static String ask(Variable var) throws InterruptedException {
-        getController().askVar(var);
-
-//        todo
-        return null;
-    }
+//    public static String ask(Variable var) throws InterruptedException {
+//        return getController().askVar(var);
+//    }
 
     public static Controller getController() {
         return controller;
