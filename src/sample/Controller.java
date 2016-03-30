@@ -7,12 +7,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -42,6 +50,7 @@ public class Controller {
     public Button confirmButton;
     public Button stopConsButton;
     public Button startConsButton;
+    public TextArea targetTextArea;
 
     private DomainController domainController;
     private String domainOperation;
@@ -572,6 +581,9 @@ public class Controller {
         getStartConsButton().setDisable(true);
         Variable selVar=getConsVarCombo().getSelectionModel().getSelectedItem();
         setSem(new Semaphore(0, true));
+
+        getAnswerList().requestFocus();
+        getTargetTextArea().setText(String.format("Consultation target: \'%s\'\n",selVar.getName()));
         Main.getShell().startCons(selVar);
     }
 
@@ -584,10 +596,18 @@ public class Controller {
             var.getDomain().getValues().getList().forEach(x->{
                 RadioButton rb=new RadioButton(x.getValue());
                 rb.setToggleGroup(group);
+                rb.setPrefHeight(25);
+                rb.setPrefWidth(1000);
+                rb.setBackground(new Background(new BackgroundFill(Color.WHEAT,new CornerRadii(10), Insets.EMPTY)));
                 getAnswerList().getChildren().add(rb);
-                rb.setSelected(true);
+//                rb.setSelected(true);
             });
             getConfirmButton().setDisable(false);
+            if(getAnswerList().getChildren().size()>0){
+                getAnswerList().getChildren().get(0).requestFocus();
+                ((RadioButton)getAnswerList().getChildren().get(0)).setSelected(true);
+            }
+
         });
 
 
@@ -603,6 +623,7 @@ public class Controller {
         getStopConsButton().setDisable(true);
         getConfirmButton().setDisable(true);
         getAnswerList().getChildren().clear();
+        getConsTabQuestionTextArea().clear();
 
     }
 
@@ -651,7 +672,23 @@ public class Controller {
     }
 
     public void CloseCons(ActionEvent actionEvent) {
-        getSem().release();
+        if (getSem()!=null)
+            getSem().release();
         Main.getStage().close();
+    }
+
+    public TextArea getTargetTextArea() {
+        return targetTextArea;
+    }
+
+    public void onConsKeyUp(Event event) {
+//        if(((KeyEvent)event).getCode()== KeyCode.ENTER){
+//            if(!getConfirmButton().isDisabled()){
+//                getConfirmButton().fire();
+//                System.out.println("shit");
+//
+//            }
+//
+//        }
     }
 }
