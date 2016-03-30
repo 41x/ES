@@ -3,3 +3,5 @@
 lastKB
 out/*
 *.kb
+.idea/misc.xml
+ES.iml
