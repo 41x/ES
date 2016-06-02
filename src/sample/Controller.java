@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
@@ -45,12 +46,20 @@ public class Controller {
     public TextArea reasoningTextArea;
     public ComboBox<Variable> consVarCombo;
     public VBox answerList;
-    public TextArea consTabLogTextArea;
     public TextArea consTabQuestionTextArea;
     public Button confirmButton;
     public Button stopConsButton;
     public Button startConsButton;
     public TextArea targetTextArea;
+    public Tab domsTab;
+    public Tab varsTab;
+    public Tab rulesTab;
+    public Tab consTab;
+    public Tab reasTab;
+    public TreeView<String> treeView;
+    public TableView explTabTableView;
+    public Button expandButton;
+    public VBox errorVbox;
 
     private DomainController domainController;
     private String domainOperation;
@@ -63,6 +72,8 @@ public class Controller {
 
     private Semaphore sem=null;
     private String answer="?";
+
+    DialogBoxController dialogBoxController;
 
     public void NewKB(ActionEvent actionEvent) {
         Main.setShell(new Shell());
@@ -100,7 +111,6 @@ public class Controller {
         }
     }
 
-
     public void Close(ActionEvent actionEvent) {
         Main.getStage().close();
     }
@@ -108,6 +118,7 @@ public class Controller {
     public void onAddDomain() {
         setDomainOperation("add");
         Stage domainStage = domainStageFactory();
+        domainController.getNameTextField().setText("Введите название домена");
         final ObservableList<DomainValue> data = FXCollections.observableArrayList();
         getDomainController().setList(data);
         getDomainController().getTableView().setItems(data);
@@ -117,13 +128,16 @@ public class Controller {
 
     public void onEditDomain() {
         if (getDomainTableView().getSelectionModel().isEmpty()) return;
+        Domain selectedDomain = getDomainTableView().getSelectionModel().getSelectedItem();
+        String vars=Main.getShell().getKnowledgeBase().getVariables().useDomain(selectedDomain);
+
+        if (!vars.trim().equals("")){
+            if (!Main.getController().alert("Внимание!\nДанный домен используется переменными:\n"
+                    +vars+"\nВы хотите продолжить?")) return;
+        }
+
         setDomainOperation("edit");
         Stage domainStage = domainStageFactory();
-        Domain selectedDomain = getDomainTableView().getSelectionModel().getSelectedItem();
-        if (Main.getShell().getKnowledgeBase().getVariables().useDomain(selectedDomain)){
-            System.out.println("The domain is used in variables");
-            return;
-        }
 
         getDomainController().nameTextField.setText(selectedDomain.getName());
 
@@ -135,17 +149,34 @@ public class Controller {
     }
 
 
+    private boolean rUsesVars(Rule r,List<Variable> vars){
+        return vars.stream().filter(x->r.uses(x)).count()>0;
+    }
     public void onDeleteDomain(ActionEvent actionEvent) {
+
         if (getDomainTableView().getSelectionModel().isEmpty()) return;
-        Domain selDomain = getDomainTableView().getSelectionModel().getSelectedItem();
-        getKB().getDomains().remove(selDomain);
+        Domain selectedDomain = getDomainTableView().getSelectionModel().getSelectedItem();
+        List<Variable> vars=Main.getShell().getKnowledgeBase().getVariables().usesDomain(selectedDomain);
+        Variables variables=Main.getShell().getKnowledgeBase().getVariables();
+        Rules rules=Main.getShell().getKnowledgeBase().getRules();
+        List<Rule> rulesUseDomain=rules.getList().stream().filter(x->rUsesVars(x,vars)).collect(Collectors.toList());
+        if (vars.size()>0){
+            if (!Main.getController().alert(String.format("Внимание!\nДанный домен используется\nправилами:\n%s\n" +
+                    "переменными:\n%s\nУдаление будет каскадным!\nВы хотите продолжить?",
+                    rulesUseDomain.stream().map(x->x.getRealName()).collect(Collectors.joining("\n")),
+                    vars.stream().map(Variable::getName).collect(Collectors.joining("\n")))))
+                return;
+        }
+        rulesUseDomain.forEach(x-> rules.getList().remove(x));
+        vars.forEach(x-> variables.getList().remove(x));
+        getKB().getDomains().remove(selectedDomain);
     }
 
 
     public void onAddVariable(ActionEvent actionEvent) {
         setVariableOperation("add");
         Stage varStage = variableStageFactory();
-
+        getVariableController().getNameTextField().setText("Введите название переменной");
         if (varStage != null)
             varStage.show();
     }
@@ -154,14 +185,18 @@ public class Controller {
 
     public void onEditVariable(ActionEvent actionEvent) {
         if (getVarTableView().getSelectionModel().isEmpty()) return;
+        Variable selectedVar=getVarTableView().getSelectionModel().getSelectedItem();
+        Rules rules=Main.getShell().getKnowledgeBase().getRules();
+        List<Rule> rulesThatUseVar=rules.uses(selectedVar);
+        if(rulesThatUseVar.size()>0){
+            if(!Main.getController().alert(String.format("Внимание!\nДанная переменная используется в правилах:" +
+                    "\n%s\nВы хотите продолжить?",rulesThatUseVar.stream().map(x->x.getRealName())
+                    .collect(Collectors.joining("\n"))))){
+                return;
+            }
+        }
         setVariableOperation("edit");
         Stage varStage = variableStageFactory();
-
-        Variable selectedVar=getVarTableView().getSelectionModel().getSelectedItem();
-        if(Main.getShell().getKnowledgeBase().getRules().use(selectedVar)){
-            System.out.println("The variable is used in rules");
-            return;
-        }
 
         getVariableController().getNameTextField().setText(selectedVar.getName());
         getVariableController().getRadioInfer().setSelected(selectedVar.getType()==VarType.INFER);
@@ -176,12 +211,33 @@ public class Controller {
     public void onAddRule(ActionEvent actionEvent) {
         setRuleOperation("add");
         Stage varStage = ruleStageFactory();
+        getRuleController().realNameTextFiled.setText("Введите название правила");
 
         ObservableList<VarVal> list=FXCollections.observableArrayList();
         getRuleController().getAddRulePremisesTableView().setItems(list);
 
         if (varStage != null)
             varStage.show();
+    }
+
+
+    public void onVarDelete(ActionEvent actionEvent) {
+        if(getVarTableView().getSelectionModel().isEmpty()) return;
+        Variable selVar=getVarTableView().getSelectionModel().getSelectedItem();
+        Rules rules=Main.getShell().getKnowledgeBase().getRules();
+        List<Rule> rulesThatUseVar=rules.uses(selVar);
+
+        if(rulesThatUseVar.size()>0){
+            if(!Main.getController().alert(String.format("Внимание!\nДанная переменная используется в правилах:" +
+                    "\n%s\nУдаление будет каскадным!\nВы хотите продолжить?",rulesThatUseVar.stream().map(x->x.getRealName())
+                    .collect(Collectors.joining("\n"))))){
+                return;
+            }
+        }
+        rulesThatUseVar.forEach(x->{
+            rules.getList().remove(x);
+        });
+        getKB().getVariables().remove(selVar);
     }
 
     public void onEditRule(ActionEvent actionEvent) {
@@ -193,7 +249,7 @@ public class Controller {
         List<VarVal> list=selRule.getPremises().getList().stream().map(VarVal::clone).collect(Collectors.toList());
         getRuleController().getAddRulePremisesTableView().setItems(FXCollections.observableArrayList(list));
 
-        getRuleController().getNameTextField().setText(selRule.getName());
+        getRuleController().realNameTextFiled.setText(selRule.getRealName());
         getRuleController().getRequestTextField().setText(selRule.getReasoning());
 
         getRuleController().getAddRuleConcVarCombo().getSelectionModel().select(
@@ -219,21 +275,20 @@ public class Controller {
         }
         setRuleController(loader.getController());
 //        premises table
-//        getRuleController().getAddRulePremisesTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<VarVal,String> numberCol = new TableColumn<>("#");
-        numberCol.setPrefWidth(50);
+        numberCol.setMaxWidth(200);
         numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(Integer.toString(getRuleController()
                 .getAddRulePremisesTableView().getItems().indexOf(p.getValue()) + 1)));
         numberCol.setSortable(false);
 
-        TableColumn<VarVal, String> varname= new TableColumn<>("Variable");
+        TableColumn<VarVal, String> varname= new TableColumn<>("Переменная");
         varname.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(p.getValue().getVariable().getName()));
 
         TableColumn<VarVal,String> eq = new TableColumn<>("");
-        eq.setPrefWidth(30);
+        eq.setMaxWidth(200);
         eq.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>("="));
 
-        TableColumn<VarVal, String> value= new TableColumn<>("Value");
+        TableColumn<VarVal, String> value= new TableColumn<>("Значение");
         value.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(p.getValue().getDomainValue().getValue()));
         getRuleController().getAddRulePremisesTableView().getColumns().addAll(numberCol,varname,eq, value);
 
@@ -361,12 +416,12 @@ public class Controller {
         setVariableController(loader.getController());
 
         TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
-        numberCol.setPrefWidth(50);
+        numberCol.setMaxWidth(200);
         numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(Integer.toString(getVariableController()
                 .getAddVarDomainValTableView().getItems().indexOf(p.getValue()) + 1)));
         numberCol.setSortable(false);
 
-        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
+        TableColumn<DomainValue, String> value= new TableColumn<>("Значение");
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
         getVariableController().getAddVarDomainValTableView().getColumns().addAll(numberCol, value);
 
@@ -402,7 +457,10 @@ public class Controller {
                 });
 
 
-        getVariableController().getRadioInfer().fire();
+        getVariableController().getRadioRequest().fire();
+
+        if(Main.getShell().getKnowledgeBase().getDomains().getList().size()>0)
+            variableController.getDomainCombo().getSelectionModel().select(0);
 
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -423,21 +481,265 @@ public class Controller {
         setDomainController(loader.getController());
 
         TableColumn<DomainValue,String> numberCol = new TableColumn<>("#");
-        numberCol.setPrefWidth(50);
+        numberCol.setMaxWidth(200);
         numberCol.setCellValueFactory(p ->new ReadOnlyObjectWrapper<>(
                 Integer.toString(getDomainController().getTableView().getItems().indexOf(p.getValue()) + 1)));
         numberCol.setSortable(false);
 
-        TableColumn<DomainValue, String> value= new TableColumn<>("Value");
+        TableColumn<DomainValue, String> value= new TableColumn<>("Значение");
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
         getDomainController().getTableView().getColumns().addAll(numberCol, value);
-
 
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         return stage;
     }
 
+    public void onConsultTab(Event event) {
+        getConfirmButton().setDisable(true);
+        getStopConsButton().setDisable(true);
+
+        List<Variable> l=Main.getShell().getKnowledgeBase().getVariables().getList()
+                .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList());
+        getConsVarCombo().setItems(FXCollections.observableArrayList(l));
+    }
+
+    public void onStopCons(ActionEvent actionEvent) {
+        setAnswer("?");
+        getSem().release(100);
+        getStartConsButton().setDisable(false);
+        getStopConsButton().setDisable(true);
+        getConfirmButton().setDisable(true);
+        unblockTabs();
+    }
+
+    public void onConfirm(ActionEvent actionEvent) {
+        getConfirmButton().setDisable(true);
+        int i=0;
+        List<Node> l=getAnswerList().getChildren();
+        while (i<l.size() && !((RadioButton)l.get(i)).isSelected()) i++;
+        setAnswer(i==l.size()?"":((RadioButton)l.get(i)).getText());
+        getConsTabQuestionTextArea().appendText(String.format("ответ: %s\n\n",getAnswer()));
+        getSem().release();
+    }
+
+    public void onStartCons(ActionEvent actionEvent) throws InterruptedException {
+        Main.perror("Cons started");
+        blockTabs();
+        getExplTabTableView().getItems().clear();
+        getConsTabQuestionTextArea().clear();
+        getAnswerList().setSpacing(10);
+
+
+        getTreeView().setShowRoot(false);
+
+        getTreeView().setRoot(null);
+        if(getConsVarCombo().getSelectionModel().isEmpty()) return;
+        getStopConsButton().setDisable(false);
+        getStartConsButton().setDisable(true);
+        Variable selVar=getConsVarCombo().getSelectionModel().getSelectedItem();
+        setSem(new Semaphore(0, true));
+
+        getAnswerList().requestFocus();
+        getTargetTextArea().setText(String.format("Цель Консультации: \'%s\'\n",selVar.getName()));
+        Main.getShell().startCons(selVar);
+
+//        getConsTabLogTreeView().scrollTo(getConsTabLogTreeView().getExpandedItemCount()-1);
+    }
+
+    public String askVar(Variable var) throws InterruptedException {
+
+        Platform.runLater(() -> {
+            String question=var.getQuestion().trim().equals("")?var.getName()+"?":var.getQuestion();
+            getConsTabQuestionTextArea().appendText("вопрос: "+question+"\n");
+            getAnswerList().getChildren().clear();
+            ToggleGroup group = new ToggleGroup();
+            var.getDomain().getValues().getList().forEach(x->{
+                RadioButton rb=new RadioButton(x.getValue());
+                rb.setToggleGroup(group);
+                rb.setPrefWidth(1000);
+                rb.setBackground(new Background(new BackgroundFill(Color.ALICEBLUE,new CornerRadii(10), Insets.EMPTY)));
+                getAnswerList().getChildren().add(rb);
+                rb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if(rb.isSelected()){
+                        rb.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(10), Insets.EMPTY)));
+                    }else {
+                        rb.setBackground(new Background(new BackgroundFill(Color.ALICEBLUE,new CornerRadii(10), Insets.EMPTY)));
+                    }
+                });
+
+            });
+            getConfirmButton().setDisable(false);
+            if(getAnswerList().getChildren().size()>0){
+                getAnswerList().getChildren().get(0).requestFocus();
+                ((RadioButton)getAnswerList().getChildren().get(0)).setSelected(true);
+            }
+
+        });
+
+
+        getSem().acquire();
+        String res=getAnswer();
+        return res;
+
+    }
+
+    public void resetCons(){
+        getStartConsButton().setDisable(false);
+        getStopConsButton().setDisable(true);
+        getConfirmButton().setDisable(true);
+        getAnswerList().getChildren().clear();
+        unblockTabs();
+
+    }
+
+    public TextArea getConsTabQuestionTextArea() {
+        return consTabQuestionTextArea;
+    }
+
+    public void setConsTabQuestionTextArea(TextArea consTabQuestionTextArea) {
+        this.consTabQuestionTextArea = consTabQuestionTextArea;
+    }
+
+    public Semaphore getSem() {
+        return sem;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public Button getConfirmButton() {
+        return confirmButton;
+    }
+
+    public Button getStopConsButton() {
+        return stopConsButton;
+    }
+
+    public void setSem(Semaphore sem) {
+        this.sem = sem;
+    }
+
+    public Button getStartConsButton() {
+        return startConsButton;
+    }
+
+    public void CloseCons(ActionEvent actionEvent) {
+        if (getSem()!=null) {
+//            System.out.println(getSem().availablePermits());
+            getSem().release(100);
+//            System.out.println(getSem().availablePermits());
+        }
+        Main.getStage().close();
+    }
+
+    public TextArea getTargetTextArea() {
+        return targetTextArea;
+    }
+
+    public Tab getDomsTab() {
+        return domsTab;
+    }
+
+    public Tab getVarsTab() {
+        return varsTab;
+    }
+
+    public Tab getRulesTab() {
+        return rulesTab;
+    }
+
+    public Tab getConsTab() {
+        return consTab;
+    }
+
+    public Tab getReasTab() {
+        return reasTab;
+    }
+
+    public TreeView<String> getTreeView() {
+        return treeView;
+    }
+
+    public TableView getExplTabTableView() {
+        return explTabTableView;
+    }
+
+    public Button getExpandButton() {
+        return expandButton;
+    }
+
+    private void blockTabs(){
+        getRulesTab().setDisable(true);
+        getVarsTab().setDisable(true);
+        getDomsTab().setDisable(true);
+        getReasTab().setDisable(true);
+    }
+    private void unblockTabs(){
+        getRulesTab().setDisable(false);
+        getVarsTab().setDisable(false);
+        getDomsTab().setDisable(false);
+        getReasTab().setDisable(false);
+    }
+
+    public void appendExplVarTableView(Variable var,DomainValue val){
+        getExplTabTableView().getItems().add(new VarVal(var,val));
+    }
+
+    public void expandCollapse(ActionEvent actionEvent) {
+        TreeItem r=getTreeView().getRoot();
+        if(treeView==null || r==null) return;
+        if (getExpandButton().getText().equals("Развернуть")) {
+            collapse(getTreeView().getRoot());
+            getExpandButton().setText("Свернуть");
+        }
+        else{
+            getTreeView().getRoot().getChildren().forEach(x->{
+                x.setExpanded(false);
+            });
+            getExpandButton().setText("Развернуть");
+        }
+    }
+
+    private void collapse(TreeItem<String> root){
+        if (root==null) return;
+        root.setExpanded(true);
+        if(root.getChildren().size()!=0)
+            root.getChildren().forEach(this::collapse);
+    }
+
+    public VBox getErrorVbox() {
+        return errorVbox;
+    }
+
+    public Stage alertStageBuilder(String message){
+        Stage stage=new Stage();
+        Parent root;
+        FXMLLoader loader;
+        try {
+            loader = new FXMLLoader(getClass().getResource("DialogBox.fxml"));
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        dialogBoxController=loader.getController();
+        dialogBoxController.getTArea().setText(message);
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return stage;
+    }
+
+    public boolean alert(String m){
+        Stage stage=alertStageBuilder(m);
+        stage.showAndWait();
+        return dialogBoxController.getRes();
+    }
 
     public DomainController getDomainController() {
         return domainController;
@@ -491,9 +793,7 @@ public class Controller {
         return reqTextArea;
     }
 
-    public void onVarDelete(ActionEvent actionEvent) {
-        getKB().getVariables().remove(getVarTableView().getSelectionModel().getSelectedItem());
-    }
+
 
     private KB getKB(){
         return Main.getShell().getKnowledgeBase();
@@ -536,8 +836,10 @@ public class Controller {
     }
 
     public void onRuleDelete(ActionEvent actionEvent) {
-        Main.getShell().getKnowledgeBase().getRules()
-                .remove(getRuleTableView().getSelectionModel().getSelectedItem().getName());
+        Rule selRule=getRuleTableView().getSelectionModel().getSelectedItem();
+        boolean sure=alert(String.format("Удалить правило \"%s\"?",selRule.getRealName()));
+        if(sure)
+            Main.getShell().getKnowledgeBase().getRules().remove(selRule.getName());
     }
 
     public ComboBox<Variable> getConsVarCombo() {
@@ -546,149 +848,5 @@ public class Controller {
 
     public VBox getAnswerList() {
         return answerList;
-    }
-
-    public void onConsultTab(Event event) {
-        getConfirmButton().setDisable(true);
-        getStopConsButton().setDisable(true);
-
-        List<Variable> l=Main.getShell().getKnowledgeBase().getVariables().getList()
-                .stream().filter(x->x.getType()!=VarType.ASK).collect(Collectors.toList());
-        getConsVarCombo().setItems(FXCollections.observableArrayList(l));
-    }
-
-    public void onStopCons(ActionEvent actionEvent) {
-        setAnswer("?");
-        getSem().release();
-        getStartConsButton().setDisable(false);
-        getStopConsButton().setDisable(true);
-        getConfirmButton().setDisable(true);
-    }
-
-    public void onConfirm(ActionEvent actionEvent) {
-        getConfirmButton().setDisable(true);
-        int i=0;
-        List<Node> l=getAnswerList().getChildren();
-        while (i<l.size() && !((RadioButton)l.get(i)).isSelected()) i++;
-        setAnswer(i==l.size()?"":((RadioButton)l.get(i)).getText());
-        getSem().release();
-    }
-
-    public void onStartCons(ActionEvent actionEvent) throws InterruptedException {
-        getConsTabLogTextArea().clear();
-        if(getConsVarCombo().getSelectionModel().isEmpty()) return;
-        getStopConsButton().setDisable(false);
-        getStartConsButton().setDisable(true);
-        Variable selVar=getConsVarCombo().getSelectionModel().getSelectedItem();
-        setSem(new Semaphore(0, true));
-
-        getAnswerList().requestFocus();
-        getTargetTextArea().setText(String.format("Consultation target: \'%s\'\n",selVar.getName()));
-        Main.getShell().startCons(selVar);
-    }
-
-    public String askVar(Variable var) throws InterruptedException {
-
-        Platform.runLater(() -> {
-            getConsTabQuestionTextArea().setText(var.getQuestion());
-            getAnswerList().getChildren().clear();
-            ToggleGroup group = new ToggleGroup();
-            var.getDomain().getValues().getList().forEach(x->{
-                RadioButton rb=new RadioButton(x.getValue());
-                rb.setToggleGroup(group);
-                rb.setPrefHeight(25);
-                rb.setPrefWidth(1000);
-                rb.setBackground(new Background(new BackgroundFill(Color.WHEAT,new CornerRadii(10), Insets.EMPTY)));
-                getAnswerList().getChildren().add(rb);
-//                rb.setSelected(true);
-            });
-            getConfirmButton().setDisable(false);
-            if(getAnswerList().getChildren().size()>0){
-                getAnswerList().getChildren().get(0).requestFocus();
-                ((RadioButton)getAnswerList().getChildren().get(0)).setSelected(true);
-            }
-
-        });
-
-
-        getSem().acquire();
-        String res=getAnswer();
-//        System.out.println(String.format("im thread answer is %s, go",res));
-        return res;
-
-    }
-
-    public void resetCons(){
-        getStartConsButton().setDisable(false);
-        getStopConsButton().setDisable(true);
-        getConfirmButton().setDisable(true);
-        getAnswerList().getChildren().clear();
-        getConsTabQuestionTextArea().clear();
-
-    }
-
-    public TextArea getConsTabLogTextArea() {
-        return consTabLogTextArea;
-    }
-
-    public void setConsTabLogTextArea(TextArea consTabLogTextArea) {
-        this.consTabLogTextArea = consTabLogTextArea;
-    }
-
-    public TextArea getConsTabQuestionTextArea() {
-        return consTabQuestionTextArea;
-    }
-
-    public void setConsTabQuestionTextArea(TextArea consTabQuestionTextArea) {
-        this.consTabQuestionTextArea = consTabQuestionTextArea;
-    }
-
-    public Semaphore getSem() {
-        return sem;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public Button getConfirmButton() {
-        return confirmButton;
-    }
-
-    public Button getStopConsButton() {
-        return stopConsButton;
-    }
-
-    public void setSem(Semaphore sem) {
-        this.sem = sem;
-    }
-
-    public Button getStartConsButton() {
-        return startConsButton;
-    }
-
-    public void CloseCons(ActionEvent actionEvent) {
-        if (getSem()!=null)
-            getSem().release();
-        Main.getStage().close();
-    }
-
-    public TextArea getTargetTextArea() {
-        return targetTextArea;
-    }
-
-    public void onConsKeyUp(Event event) {
-//        if(((KeyEvent)event).getCode()== KeyCode.ENTER){
-//            if(!getConfirmButton().isDisabled()){
-//                getConfirmButton().fire();
-//                System.out.println("shit");
-//
-//            }
-//
-//        }
     }
 }

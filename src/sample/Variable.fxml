@@ -7,57 +7,68 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.VariableController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.VariableController">
    <children>
-      <TextField fx:id="nameTextField" promptText="Name">
+      <TextField fx:id="nameTextField" promptText="Название">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextField>
-      <Text fill="#0000006e" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Type">
+      <Text fill="#0000006e" strokeType="OUTSIDE" strokeWidth="0.0" text="Выберите тип:">
          <VBox.margin>
             <Insets left="5.0" />
          </VBox.margin>
       </Text>
       <HBox prefWidth="200.0">
          <children>
-            <RadioButton fx:id="radioInfer" mnemonicParsing="false" text="Inferable">
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
+            <RadioButton fx:id="radioRequest" mnemonicParsing="false" text="Запрашиваемая">
                <toggleGroup>
                   <ToggleGroup fx:id="one" />
                </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="radioRequest" mnemonicParsing="false" text="Request" toggleGroup="$one">
                <HBox.margin>
                   <Insets right="5.0" />
                </HBox.margin>
             </RadioButton>
-            <RadioButton fx:id="radioInfReq" mnemonicParsing="false" text="Infer-request" toggleGroup="$one" />
+            <RadioButton fx:id="radioInfer" mnemonicParsing="false" text="Выводимая" toggleGroup="$one">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="radioInfReq" mnemonicParsing="false" text="Выводимо-запрашиваемая" toggleGroup="$one" />
          </children>
       </HBox>
-      <TextArea fx:id="requestTextField" prefHeight="100.0" prefWidth="200.0" promptText="Enter query text">
+      <TextArea fx:id="requestTextField" prefHeight="100.0" prefWidth="200.0" promptText="Текст вопроса/Пояснение">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </TextArea>
-      <ComboBox fx:id="domainCombo" prefWidth="1000.0" promptText="Select Domain">
+      <HBox prefWidth="200.0" VBox.vgrow="NEVER">
+         <children>
+            <ComboBox fx:id="domainCombo" prefWidth="1000.0" promptText="Выберите домен" />
+            <Button mnemonicParsing="false" onAction="#onDomPlus" text="+">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+         </children>
          <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets left="5.0" right="5.0" />
          </VBox.margin>
-      </ComboBox>
+      </HBox>
       <TableView fx:id="addVarDomainValTableView" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
-      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onAdd" prefWidth="1000.0" text="Add">
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onAdd" prefWidth="1000.0" text="Добавить">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </Button>
-      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onEdit" prefWidth="1000.0" text="Edit">
+      <Button minWidth="100.0" mnemonicParsing="false" onAction="#onEdit" prefWidth="1000.0" text="Изменить">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
@@ -67,12 +78,12 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
          <children>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefWidth="1000.0" text="OK" HBox.hgrow="ALWAYS">
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onOK" prefWidth="1000.0" text="Применить" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Close" HBox.hgrow="ALWAYS">
+            <Button minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="1000.0" text="Закрыть" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>

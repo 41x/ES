@@ -18,29 +18,18 @@ public class Domains implements Serializable{
         this.list = FXCollections.observableArrayList();
     }
 
-    public boolean add(String name, DomainValues values){
-        if (this.contains(name)){
-            System.out.println("Domain name should be unique");
-            return false;
-        }
-
-        Domain d=new Domain(name,values);
-        d.setKb(kb);
-        values.setDomain(d);
-        return list.add(d);
+    public boolean add(Domain dom){
+        dom.setKb(kb);
+        return list.add(dom);
     }
 
     public boolean remove(Domain d){
-        if (!kb.getVariables().useDomain(d))
-            return list.remove(d);
-        System.out.println("This domain is used in variables");
-        return false;
+
+        return list.remove(d);
     }
 
-    public boolean contains(String domname){
-        int i=0;
-        while (i<list.size() && !list.get(i).getName().equals(domname)) i++;
-        return i < list.size();
+    public boolean contains(Domain dom){
+        return list.stream().filter(x->x.equals(dom)).count()>0;
     }
 
     public ObservableList<Domain> getList() {

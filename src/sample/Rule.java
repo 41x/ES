@@ -10,15 +10,22 @@ import java.util.stream.Collectors;
  * Created by ваа on 02.03.2016.
  */
 public class Rule implements Serializable, Comparable<Rule> {
+    private String realName;
     private String name;
     private String reasoning;
     private Conclusion conclusion;
     private Premises premises;
     private KB kb;
 
-    public Rule(String name, String reasoning, ObservableList<VarVal> premisesList,Conclusion conclusion,KB kb) {
+    static Rule create(String realName, String reasoning, ObservableList<VarVal> premisesList, Conclusion conclusion, KB kb){
+        Rule r=new Rule(realName,reasoning, premisesList, conclusion, kb);
+        r.setName(r.getRuleView2());
+        return r;
+    }
+
+    private Rule(String realName, String reasoning, ObservableList<VarVal> premisesList, Conclusion conclusion, KB kb) {
+        this.realName=realName;
         this.kb=kb;
-        this.name = name;
         this.reasoning = reasoning;
         this.conclusion = conclusion;
         this.premises = new Premises(premisesList);
@@ -40,18 +47,23 @@ public class Rule implements Serializable, Comparable<Rule> {
 
 
     public String getName() {
+        updateName();
         return name;
     }
 
-    public String getReasoning() {
+    public void updateName(){
+        this.setName(this.getRuleView2());
+    }
+
+    String getReasoning() {
         return reasoning;
     }
 
-    public Conclusion getConclusion() {
+    Conclusion getConclusion() {
         return conclusion;
     }
 
-    public Premises getPremises() {
+    Premises getPremises() {
         return premises;
     }
 
@@ -68,7 +80,7 @@ public class Rule implements Serializable, Comparable<Rule> {
         getPremises().toWorkingState();
     }
 
-    public String getRuleView(String indent){
+    String getRuleView(String indent){
         String res="IF\n "+indent;
         String premises=getPremises().getList().stream().map(x->x.varname()+"="+x.varvalue()).collect(Collectors.joining(",\n "+indent));
 
@@ -76,11 +88,44 @@ public class Rule implements Serializable, Comparable<Rule> {
         return res+premises+concl;
     }
 
-    public void setName(String name) {
+    String getRuleView2(){
+        String res="IF ";
+        String premises=getPremises().getList().stream().map(x->x.varname()+" = "+x.varvalue()).collect(Collectors.joining(" and "));
+
+        String concl=" THEN "+getConclusion().getVarval().varname()+" = "+getConclusion().getVarval().varvalue();
+        return res+premises+concl;
+    }
+
+    void setName(String name) {
         this.name = name;
     }
 
-    public void setReasoning(String reasoning) {
+    void setReasoning(String reasoning) {
         this.reasoning = reasoning;
+    }
+
+//    public boolean equals(Rule obj) {
+//        boolean res= conclusion.equals(obj.getConclusion()) && premises.equals(obj.getPremises());
+//        return res;
+//    }
+    public boolean equals(Rule obj) {
+        return realName.equalsIgnoreCase(obj.getRealName());
+    }
+
+    public boolean uses(Variable var){
+        return getPremises().getList().stream().filter(x->x.getVariable().equals(var)).count()>0
+                || getConclusion().getVarval().getVariable().equals(var);
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public void setPremises(Premises premises) {
+        this.premises = premises;
     }
 }

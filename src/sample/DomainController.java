@@ -19,12 +19,16 @@ public class DomainController {
 
     public void onAdd(ActionEvent actionEvent) {
         if (!validate()) return;
-        valueTextField.requestFocus();
         // dvs are unique
-        if (list.stream().filter(dv -> dv.getValue().equals(valueTextField.getText())).count() > 0) {
+        if (list.stream().filter(dv -> dv.getValue().equals(valueTextField.getText())).count() > 0 ||
+                valueTextField.getText().equals("Введите значение")) {
+            valueTextField.requestFocus();
             return;
         }
         list.add(new DomainValue(valueTextField.getText()));
+        valueTextField.setText("Введите значение");
+        valueTextField.requestFocus();
+
     }
 
     public void onReplace(ActionEvent actionEvent) {
@@ -45,31 +49,46 @@ public class DomainController {
     }
 
     public void onOK(ActionEvent actionEvent) {
-        if (Main.getController().getDomainOperation().equals("add")) {
-            if (!validateOK()) return;
-            if (nameTextField.getText().equalsIgnoreCase("")
-                    || tableView.getItems().size() == 0) return;
+        if (!validateOK()) return;
+//        if (nameTextField.getText().equalsIgnoreCase("")
+//                || tableView.getItems().size() == 0) return;
 
-            Main.getShell().getKnowledgeBase().getDomains().add(nameTextField.getText(), new DomainValues(list));
+        Domain dom=new Domain(nameTextField.getText(), new DomainValues(list));
+        Domains doms=Main.getShell().getKnowledgeBase().getDomains();
+        if (Main.getController().getDomainOperation().equals("add")) {
+
+            if(doms.contains(dom)){
+                Main.perror("duplicate domain");
+                return;
+            }
+
+            doms.add(dom);
             nameTextField.clear();
             valueTextField.clear();
             list = FXCollections.observableArrayList();
             tableView.setItems(list);
             nameTextField.requestFocus();
+            //
+            VariableController c= Main.getController().getVariableController();
+            if(c!=null){
+                ComboBox<Domain> comb=c.getDomainCombo();
+                if (comb!=null){
+                    comb.getSelectionModel().select(dom);
+                }
+            }
+
         } else if (Main.getController().getDomainOperation().equals("edit")) {
-            if (!validateOK()) return;
             Domain selectedDomain = Main.getController().getDomainTableView().getSelectionModel().getSelectedItem();
-            Domains ds = Main.getShell().getKnowledgeBase().getDomains();
+            if(doms.contains(dom) && !dom.equals(selectedDomain)){
+                Main.perror("duplicate domain");
+                return;
+            }
 
-            if (nameTextField.getText().equalsIgnoreCase("")
-                    || (!nameTextField.getText().equalsIgnoreCase(selectedDomain.getName())
-                    && ds.getList().stream().filter(d -> d.getName()
-                    .equalsIgnoreCase(nameTextField.getText())).count() > 0)) return;
+            selectedDomain.setName(dom.getName());
+            selectedDomain.setValues(dom.getValues());
+            selectedDomain.setSerName(dom.getSerName());
 
-            selectedDomain.setName(nameTextField.getText());
-            selectedDomain.getValues().setList(list);
-
-            Main.getController().getDomainValuesTableView().setItems(selectedDomain.getValues().getList());
+            Main.getController().getDomainValuesTableView().setItems(dom.getValues().getList());
 
             // update varTabEditDomValTV and combo if its called from editVar window
             VariableController varcontr=Main.getController().getVariableController();
@@ -83,9 +102,14 @@ public class DomainController {
                 sm.select(seld);
             }
             // upd varTabDomValTV
-            Domain selDomain=Main.getController().getVarTableView().getSelectionModel().getSelectedItem().getDomain();
-            Main.getController().getVarTabDomValTableView().setItems(selDomain==null?null
-                    :selDomain.getValues().getList());
+            if(!Main.getController().getVarTableView().getSelectionModel().isEmpty()){
+                Domain selDomain=Main.getController().getVarTableView().getSelectionModel().getSelectedItem().getDomain();
+                Main.getController().getVarTabDomValTableView().setItems(selDomain==null?null
+                        :selDomain.getValues().getList());
+            }
+
+//            Main.getController().getVarTableView().setItems(Main.getShell().getKnowledgeBase().getVariables().getList());
+
             // upd varTabTV
             Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
             Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
@@ -99,11 +123,12 @@ public class DomainController {
     }
 
     private boolean validate() {
-        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9/\\.\\-,]+(\\s[a-zA-Zа-яА-Я0-9/\\.\\-,]+)*")
+                || nameTextField.getText().equals("Введите название домена")) {
             nameTextField.requestFocus();
             return false;
         }
-        if (!valueTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+        if (!valueTextField.getText().matches("[a-zA-Zа-яА-Я0-9/\\.\\-,<>=]+(\\s[a-zA-Zа-яА-Я0-9/\\.\\-,<>=]+)*")) {
             valueTextField.requestFocus();
             return false;
         }
@@ -111,14 +136,15 @@ public class DomainController {
     }
 
     private boolean validateOK() {
-        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+        if (!nameTextField.getText().matches("[a-zA-Zа-яА-Я0-9/\\.\\-,]+(\\s[a-zA-Zа-яА-Я0-9/\\.\\-,]+)*")) {
             nameTextField.requestFocus();
             return false;
         }
-        if (getTableView().getItems().size()==0) {
-            valueTextField.requestFocus();
-            return false;
-        }
+
+//        if (getTableView().getItems().size()==0) {
+//            valueTextField.requestFocus();
+//            return false;
+//        }
         return true;
     }
 
@@ -136,4 +162,9 @@ public class DomainController {
         valueTextField.setText(tableView.getSelectionModel().getSelectedItem().getValue());
         valueTextField.requestFocus();
     }
+
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
 }

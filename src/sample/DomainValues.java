@@ -39,7 +39,7 @@ public class DomainValues implements Serializable{
             System.out.println("Values in one domain should be unique");
             return false;
         }
-        if (domain.getKb().getVariables().useDomain(domain)){
+        if (!domain.getKb().getVariables().useDomain(domain).trim().equals("")){
             System.out.println("This DomainValues are already used, it should not be edited");
             return false;
         }
@@ -53,7 +53,7 @@ public class DomainValues implements Serializable{
     }
 
     private boolean remove(DomainValue dv){
-        if (domain.getKb().getVariables().useDomain(domain)){
+        if (!domain.getKb().getVariables().useDomain(domain).trim().equals("")){
             System.out.println("This DomainValue Domain is already in use, you can't remove it");
             return false;
         }

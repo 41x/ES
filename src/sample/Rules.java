@@ -31,6 +31,15 @@ public class Rules implements Serializable, Iterable<Rule>{
         return list.add(r);
     }
 
+    public void add(int indx,Rule r){
+        if(find(r.getName())!=null) {
+            System.out.println(String.format("Rule name %s should be unique",r.getName()));
+            return;
+        }
+        r.setKb(kb);
+        list.add(indx,r);
+    }
+
     public boolean remove(String rname) {
         Rule r = find(rname);
         return r != null && list.remove(r);
@@ -55,13 +64,11 @@ public class Rules implements Serializable, Iterable<Rule>{
     }
 
     public void toSerializable() {
-//        todo
         getList().forEach(Rule::toSerializable);
         setSerList(getList().stream().map(x->x).collect(Collectors.toList()));
     }
 
     public void toWorkingState() {
-//        todo
         getSerList().forEach(Rule::toWorkingState);
         setList(FXCollections.observableArrayList(getSerList()));
     }
@@ -83,5 +90,16 @@ public class Rules implements Serializable, Iterable<Rule>{
                 x.getPremises().getList().stream().filter(y->
                         y.getVariable().equals(v)).findFirst().isPresent()
                         || x.getConclusion().getVarval().getVariable().equals(v)).findFirst().isPresent();
+    }
+    public List<Rule> uses(Variable v) {
+        return getList().stream().filter(x->
+                x.getPremises().getList().stream().filter(y->
+                        y.getVariable().equals(v)).findFirst().isPresent()
+                        || x.getConclusion().getVarval().getVariable().equals(v))
+                .collect(Collectors.toList());
+    }
+
+    public boolean contains(Rule r){
+        return list.stream().filter(x->x.equals(r)).count()>0;
     }
 }

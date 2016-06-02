@@ -19,4 +19,9 @@ public class Conclusion implements Serializable {
     public void setVarval(VarVal varval) {
         this.varval = varval;
     }
+
+    public boolean equals(Conclusion obj) {
+        boolean res= varval.equals(obj.getVarval());
+        return res;
+    }
 }

@@ -1,7 +1,7 @@
-.idea/workspace.xml
-12.kb
 lastKB
-out/*
 *.kb
-.idea/misc.xml
-ES.iml
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+out/*
+collapse.png
+expand.png

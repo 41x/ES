@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -10,18 +11,19 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<GridPane alignment="center" hgap="10" prefHeight="500.0" prefWidth="700.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<GridPane alignment="center" prefHeight="500.0" prefWidth="700.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" />
       <RowConstraints />
    </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
         <tabs>
-          <Tab text="Rules">
+          <Tab fx:id="rulesTab" text="Правила">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -29,31 +31,31 @@
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints fillHeight="false" vgrow="NEVER" />
                           </rowConstraints>
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="200.0" GridPane.columnIndex="2">
                                  <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddRule" prefWidth="1000.0" text="Add">
+                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddRule" prefWidth="1000.0" text="Добавить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditRule" prefWidth="1000.0" text="Edit">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditRule" prefWidth="1000.0" text="Изменить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onRuleDelete" prefWidth="1000.0" text="Delete">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onRuleDelete" prefWidth="1000.0" text="Удалить">
                                        <VBox.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Описание:" />
                                     <TextArea fx:id="ruleContent" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
@@ -62,50 +64,50 @@
                                           <Font size="18.0" />
                                        </font>
                                     </TextArea>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reasoning:" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Объяснение:" />
                                     <TextArea fx:id="reasoningTextArea" editable="false" prefHeight="150.0" prefWidth="200.0" wrapText="true">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </TextArea>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Выход">
                                        <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+                                          <Insets left="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
                                  </children>
                               </VBox>
-                              <TableView fx:id="ruleTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
+                              <TableView fx:id="ruleTableView" prefHeight="200.0" prefWidth="1000.0" GridPane.columnSpan="2" />
                            </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Variables">
+            <Tab fx:id="varsTab" text="Переменные">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="200.0" GridPane.columnIndex="2">
                                  <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddVariable" prefWidth="1000.0" text="Add">
+                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddVariable" prefWidth="1000.0" text="Добавить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditVariable" prefWidth="1000.0" text="Edit">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditVariable" prefWidth="1000.0" text="Изменить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onVarDelete" prefWidth="1000.0" text="Delete">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onVarDelete" prefWidth="1000.0" text="Удалить">
                                        <VBox.margin>
                                           <Insets left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <TextArea fx:id="reqTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Question">
+                                    <TextArea fx:id="reqTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Текст вопроса">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
@@ -115,19 +117,19 @@
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </TableView>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Выход">
                                        <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" />
+                                          <Insets left="5.0" />
                                        </VBox.margin>
                                     </Button>
                                  </children>
                               </VBox>
-                              <TableView fx:id="varTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
+                              <TableView fx:id="varTableView" prefHeight="200.0" prefWidth="1000.0" GridPane.columnSpan="2" />
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -138,25 +140,25 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Domains">
+            <Tab fx:id="domsTab" text="Домены">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="200.0" GridPane.columnIndex="2">
                                  <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddDomain" prefWidth="1000.0" text="Add">
+                                    <Button minWidth="149.0" mnemonicParsing="false" onAction="#onAddDomain" prefWidth="1000.0" text="Добавить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditDomain" prefWidth="1000.0" text="Edit">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onEditDomain" prefWidth="1000.0" text="Изменить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onDeleteDomain" prefWidth="1000.0" text="Delete">
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#onDeleteDomain" prefWidth="1000.0" text="Удалить">
                                        <VBox.margin>
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
@@ -166,19 +168,19 @@
                                           <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
                                        </VBox.margin>
                                     </TableView>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Close">
+                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Выход">
                                        <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+                                          <Insets left="5.0" top="2.5" />
                                        </VBox.margin>
                                     </Button>
                                  </children>
                               </VBox>
-                              <TableView fx:id="domainTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
+                              <TableView fx:id="domainTableView" prefHeight="200.0" prefWidth="1000.0" GridPane.columnSpan="2" />
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -189,84 +191,86 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab onSelectionChanged="#onConsultTab" text="Consultation">
+            <Tab fx:id="consTab" onSelectionChanged="#onConsultTab" text="Консультация">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" onKeyPressed="#onConsKeyUp" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+                              <VBox fx:id="answerList" prefHeight="100.0" prefWidth="1000.0" GridPane.rowIndex="2">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consultation target:">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Цель консультации:">
                                        <VBox.margin>
-                                          <Insets top="5.0" />
+                                          <Insets left="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Text>
                                     <ComboBox fx:id="consVarCombo" prefHeight="50.0" prefWidth="1000.0">
                                        <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </ComboBox>
-                                    <Button fx:id="startConsButton" minWidth="149.0" mnemonicParsing="false" onAction="#onStartCons" prefWidth="1000.0" text="Start consultation">
+                                    <Button fx:id="startConsButton" mnemonicParsing="false" onAction="#onStartCons" prefHeight="50.0" prefWidth="1000.0" text="Начать консультацию">
                                        <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
+                                          <Insets left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button fx:id="stopConsButton" minWidth="150.0" mnemonicParsing="false" onAction="#onStopCons" prefWidth="1000.0" text="Stop consultation">
+                                    <Button fx:id="stopConsButton" minWidth="150.0" mnemonicParsing="false" onAction="#onStopCons" prefHeight="50.0" prefWidth="1000.0" text="Закончить консультацию">
                                        <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </Button>
-                                    <VBox fx:id="answerList" prefHeight="200.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                       </VBox.margin></VBox>
-                                    <Button fx:id="confirmButton" defaultButton="true" minWidth="150.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="50.0" prefWidth="1000.0" text="Confirm">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </Button>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" onAction="#CloseCons" prefWidth="1000.0" text="Close">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
+                                          <Insets left="5.0" right="5.0" top="5.0" />
                                        </VBox.margin>
                                     </Button>
                                  </children>
                               </VBox>
-                              <VBox onKeyPressed="#onConsKeyUp" prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+                              <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
-                                    <TextArea fx:id="targetTextArea" editable="false" prefHeight="100.0" prefWidth="200.0" promptText="target" wrapText="true">
+                                    <Button fx:id="confirmButton" defaultButton="true" minWidth="150.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="50.0" prefWidth="1000.0" text="Подтвердить">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button minWidth="150.0" mnemonicParsing="false" onAction="#CloseCons" prefHeight="50.0" prefWidth="1000.0" text="Выход">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowSpan="2">
+                                 <children>
+                                    <TextArea fx:id="targetTextArea" editable="false" minHeight="100.0" prefHeight="100.0" prefWidth="200.0" promptText="Цель" wrapText="true">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
                                        <VBox.margin>
-                                          <Insets left="5.0" right="5.0" top="5.0" />
-                                       </VBox.margin></TextArea>
-                                    <TextArea fx:id="consTabQuestionTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="question" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="2.5" top="5.0" />
+                                          <Insets top="5.0" />
                                        </VBox.margin>
+                                    </TextArea>
+                                    <TextArea fx:id="consTabQuestionTextArea" editable="false" prefHeight="500.0" prefWidth="200.0" promptText="Вопрос">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </TextArea>
-                                    <TextArea fx:id="consTabLogTextArea" editable="false" prefHeight="100.0" prefWidth="200.0" promptText="log" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="2.5" />
-                                       </VBox.margin>
-                                    </TextArea>
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" top="5.0" />
+                                 </GridPane.margin>
                               </VBox>
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="50.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="300.0" />
                            </columnConstraints>
                            <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints fillHeight="false" vgrow="NEVER" />
                            </rowConstraints>
@@ -275,63 +279,57 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Reasoning">
+            <Tab fx:id="reasTab" text="Объяснение">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="60.0" layoutY="37.0" prefHeight="374.0" prefWidth="519.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
-                                 <children>
-                                    <Button minWidth="149.0" mnemonicParsing="false" prefWidth="1000.0" text="Add">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="5.0" />
-                                       </VBox.margin>
-                                    </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Edit">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </Button>
-                                    <Button minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Delete">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </Button>
-                                    <TextArea prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </TextArea>
-                                    <TextArea layoutX="13.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets bottom="2.5" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </TextArea>
-                                    <Button layoutX="29.0" layoutY="77.0" minWidth="150.0" mnemonicParsing="false" prefWidth="1000.0" text="Close">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="2.5" />
-                                       </VBox.margin>
-                                    </Button>
-                                 </children>
-                              </VBox>
-                              <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2">
-                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="Number" />
-                                    <TableColumn prefWidth="75.0" text="Name" />
-                                    <TableColumn prefWidth="75.0" text="Content" />
-                                 </columns>
-                              </TableView>
-                           </children>
                            <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints fillHeight="false" vgrow="NEVER" />
                            </rowConstraints>
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <GridPane HBox.hgrow="ALWAYS">
+                                      <columnConstraints>
+                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                                          <Button fx:id="expandButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#expandCollapse" text="Развернуть" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </GridPane>
+                                    <VBox maxWidth="400.0" prefWidth="300.0">
+                                       <children>
+                                          <TableView fx:id="explTabTableView" prefHeight="200.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                          <Button mnemonicParsing="false" onAction="#Close" prefWidth="1000.0" text="Выход">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
@@ -349,11 +347,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#Close" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
@@ -361,5 +354,9 @@
           </Menu>
         </menus>
       </MenuBar>
+      <VBox fx:id="errorVbox" prefHeight="20.0" GridPane.rowIndex="1">
+         <padding>
+            <Insets left="5.0" />
+         </padding></VBox>
    </children>
 </GridPane>

@@ -53,4 +53,8 @@ public class DomainValue implements Serializable, Cloneable {
     public String toString() {
         return getValue();
     }
+
+    public boolean equals(DomainValue obj) {
+        return getValue().equalsIgnoreCase(obj.getValue());
+    }
 }

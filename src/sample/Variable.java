@@ -32,6 +32,7 @@ public class Variable implements Serializable {
     }
 
     public boolean usesDomain(Domain d){
+        if (domain==null) return false;
         return domain.equals(d);
     }
 
@@ -46,10 +47,6 @@ public class Variable implements Serializable {
     public String getQuestion() {
         return question;
     }
-
-//    public void toSerializable() {
-//    }
-
 
     @Override
     public String toString() {
@@ -74,5 +71,13 @@ public class Variable implements Serializable {
 
     public void setValue(DomainValue value) {
         this.value = value;
+    }
+
+    public boolean equals(Variable obj) {
+        if (domain==null) return false;
+        boolean res= type.equals(obj.getType())
+                && question.equalsIgnoreCase(obj.getQuestion())
+                && domain.equals(obj.getDomain());
+        return res;
     }
 }

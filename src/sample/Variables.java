@@ -21,19 +21,16 @@ public class Variables implements Serializable{
         this.list = FXCollections.observableArrayList();
     }
 
-    public boolean add(String name, String question, VarType type, Domain domain) {
-        if(this.contains(name)){
-            System.out.println("variable should be unique");
-            return false;
-        }
-
-        list.add(new Variable(name, question, type, domain));
-        return true;
+    public boolean add(Variable var) {
+        return list.add(var);
+    }
+    public void add(int ind,Variable var) {
+        list.add(ind,var);
     }
 
     public boolean remove(Variable v){
         if(kb.getRules().use(v)){
-            System.out.println("The variable is used in rules");
+            Main.perror("The variable is used in rules");
             return false;
         }
         return getList().remove(v);
@@ -42,20 +39,27 @@ public class Variables implements Serializable{
 
     }
 
-    public boolean useDomain(Domain d) {
-        return list != null && list.stream().filter(v -> v.usesDomain(d)).count() > 0;
+    public String useDomain(Domain d) {
+        return list.stream().filter(v -> v.usesDomain(d)).map(Variable::getName).collect(Collectors.joining("\n"));
+//        return list != null && list.stream().filter(v -> v.usesDomain(d)).count() > 0;
+    }
+    public List<Variable> usesDomain(Domain d) {
+        return list.stream().filter(v -> v.usesDomain(d)).collect(Collectors.toList());
     }
 
-
-
-    public boolean contains(String varname){
+    public boolean containsName(String varname){
         int i=0;
-        while (i<list.size() && !list.get(i).getName().equals(varname)) i++;
+        while (i<list.size() && !list.get(i).getName().equalsIgnoreCase(varname)) i++;
         return i < list.size();
     }
 
+    public boolean contains(Variable var){
+        return list.stream().filter(x->x.equals(var)).count()>0;
+    }
+
     public Variable find(String varname){
-        List<Variable> l=getList().stream().filter(v->v.getName()==varname).collect(Collectors.toList());
+        List<Variable> l=getList().stream().filter(v->v.getName().equalsIgnoreCase(varname))
+                .collect(Collectors.toList());
         return l.size()>0?l.get(0):null;
     }
 

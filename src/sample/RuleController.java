@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import java.util.stream.Collectors;
 
 public class RuleController {
-    public TextField nameTextField;
     public TextArea requestTextField;
     public TableView<VarVal> addRulePremisesTableView;
     public ComboBox<Variable> addRulePremisVarCombo;
@@ -17,30 +16,40 @@ public class RuleController {
     public ComboBox<Variable> addRuleConcVarCombo;
     public ComboBox<DomainValue> addRuleConcDomValCombo;
     public TextArea ruleDescription;
+    public TextField realNameTextFiled;
 
     public void onAddPremis(ActionEvent actionEvent) {
-        if(getAddRulePremisVarCombo().getSelectionModel().isEmpty() ||
-                getAddRulePremisDomValCombo().getSelectionModel().isEmpty()) return;
+        if(getAddRulePremisVarCombo().getSelectionModel().isEmpty()
+                || getAddRulePremisDomValCombo().getSelectionModel().isEmpty()) return;
 
         VarVal keyVal=new VarVal(getAddRulePremisVarCombo().getSelectionModel().getSelectedItem(),
                 getAddRulePremisDomValCombo().getSelectionModel().getSelectedItem());
+        if(getAddRulePremisesTableView().getItems().stream().filter(x->x.equals(keyVal)).count()>0) return;
         getAddRulePremisesTableView().getItems().add(keyVal);
-
         getRuleDescription().setText(getRuleView());
     }
 
     public void onOK(ActionEvent actionEvent) {
-//        todo
         if(!validate()) return;
         Conclusion conclusion=new Conclusion(new VarVal(getAddRuleConcVarCombo().getSelectionModel().getSelectedItem(),
                 getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem()));
-        if(Main.getController().getRuleOperation().equals("add")){
-            Rule r=new Rule(nameTextField.getText(),
-                    requestTextField.getText(),getAddRulePremisesTableView().getItems(),conclusion,
-                    Main.getShell().getKnowledgeBase());
-            Main.getShell().getKnowledgeBase().getRules().add(r);
+        Rule r=Rule.create(realNameTextFiled.getText(),
+                requestTextField.getText(),getAddRulePremisesTableView().getItems(),conclusion,
+                Main.getShell().getKnowledgeBase());
+        Rules rules=Main.getShell().getKnowledgeBase().getRules();
 
-            getNameTextField().clear();
+        if(Main.getController().getRuleOperation().equals("add")){
+            if (rules.contains(r)){
+                Main.perror("such rule already exists in KB");
+                return;
+            }
+            r.setRealName(realNameTextFiled.getText());
+
+            int index=Main.getController().getRuleTableView().getSelectionModel().isEmpty()
+                    ?rules.getList().size()
+                    :Main.getController().getRuleTableView().getSelectionModel().getSelectedIndex();
+            Main.getShell().getKnowledgeBase().getRules().add(index,r);
+
             getRequestTextField().clear();
             getAddRulePremisVarCombo().getSelectionModel().clearSelection();
             getAddRuleConcVarCombo().getSelectionModel().clearSelection();
@@ -49,34 +58,42 @@ public class RuleController {
             ObservableList<VarVal> list=FXCollections.observableArrayList();
             getAddRulePremisesTableView().setItems(list);
             getRuleDescription().clear();
-            getNameTextField().requestFocus();
+            getRequestTextField().requestFocus();
         }else if(Main.getController().getRuleOperation().equals("edit")){
             Rule selRule=Main.getController().getRuleTableView().getSelectionModel().getSelectedItem();
-            selRule.setName(getNameTextField().getText());
-            selRule.setReasoning(getRequestTextField().getText());
-            selRule.getPremises().setList(getAddRulePremisesTableView().getItems());
 
-            selRule.getConclusion().setVarval(new VarVal(getAddRuleConcVarCombo().getSelectionModel()
-                    .getSelectedItem(),getAddRuleConcDomValCombo().getSelectionModel().getSelectedItem()));
+            if (rules.contains(r) && !r.equals(selRule)){
+                Main.perror("such rule already exists in KB");
+                return;
+            }
 
-            Main.getController().getRuleContent().setText(selRule.getRuleView(""));
-            Main.getController().getReasoningTextArea().setText(selRule.getReasoning());
+            selRule.setName(r.getName());
+            selRule.setRealName(r.getRealName());
+            selRule.setReasoning(r.getReasoning());
+            selRule.setConclusion(r.getConclusion());
+            selRule.setPremises(r.getPremises());
+            selRule.setKb(r.getKb());
+
+            //upd
+            Main.getController().getRuleContent().setText(r.getRuleView(""));
+            Main.getController().getReasoningTextArea().setText(r.getReasoning());
 
             Main.getController().getRuleTableView().getColumns().get(0).setVisible(false);
             Main.getController().getRuleTableView().getColumns().get(0).setVisible(true);
 
-            ((Stage)getNameTextField().getScene().getWindow()).close();
+            ((Stage)getAddRuleConcDomValCombo().getScene().getWindow()).close();
         }
     }
 
     public void onCancel(ActionEvent actionEvent) {
-        ((Stage)getNameTextField().getScene().getWindow()).close();
+        ((Stage)getAddRuleConcDomValCombo().getScene().getWindow()).close();
     }
 
 
     private boolean validate() {
-        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
-            getNameTextField().requestFocus();
+        if (realNameTextFiled.getText().trim().equals("")
+                || realNameTextFiled.getText().equalsIgnoreCase("Введите название правила")) {
+            realNameTextFiled.requestFocus();
             return false;
         }
         if (getRequestTextField().getText().trim().equals("")) {
@@ -105,17 +122,11 @@ public class RuleController {
 
 
 
-    public TextField getNameTextField() {
-        return nameTextField;
-    }
 
     public TextArea getRequestTextField() {
         return requestTextField;
     }
 
-    public void setNameTextField(TextField nameTextField) {
-        this.nameTextField = nameTextField;
-    }
 
 
     public void setRequestTextField(TextArea requestTextField) {

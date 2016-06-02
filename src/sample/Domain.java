@@ -67,4 +67,18 @@ public class Domain implements Serializable{
     public String toString() {
         return getName();
     }
+
+
+    public boolean contains(DomainValue dv){
+        return values.getList().stream().filter(x->x.equals(dv)).count()>0;
+    }
+
+    public boolean equals(Domain obj) {
+        return values.getList().size()==obj.getValues().getList().size()
+                && values.getList().stream().filter(x->obj.contains(x)).count()==values.getList().size();
+    }
+
+    public void setValues(DomainValues values) {
+        this.values = values;
+    }
 }

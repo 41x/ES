@@ -32,36 +32,54 @@ public class VariableController {
 
     public void onOK(ActionEvent actionEvent) {
         if(!validate()) return;
+        Domains doms=Main.getShell().getKnowledgeBase().getDomains();
+        Domain d=getDomainCombo().getSelectionModel().getSelectedItem();
+
+        Variable var=new Variable(
+                getNameTextField().getText(),
+                requestTextField.getText(),
+                radioInfer.isSelected()?VarType.INFER:(radioRequest.isSelected()?VarType.ASK:VarType.INFER_ASK),
+                getDomainCombo().getSelectionModel().getSelectedItem());
+        Variables variables=Main.getShell().getKnowledgeBase().getVariables();
 
         if(Main.getController().getVariableOperation().equals("add")){
-            Main.getShell().getKnowledgeBase().getVariables().add(
-                    getNameTextField().getText(),
-                    requestTextField.getText(),
-                    radioInfer.isSelected()?VarType.INFER:(radioRequest.isSelected()?VarType.ASK:VarType.INFER_ASK),
-                    getDomainCombo().getSelectionModel().getSelectedItem()
-            );
+            if(variables.contains(var)){
+                Main.perror("duplicate variable");
+                return;
+            }
+            variables.add(var);
             getNameTextField().clear();
             getRequestTextField().clear();
             getDomainCombo().getSelectionModel().clearSelection();
             getNameTextField().requestFocus();
         }else if(Main.getController().getVariableOperation().equals("edit")){
-            if(!validate()) return;
             Variable selectedVar=Main.getController().getVarTableView().getSelectionModel().getSelectedItem();
-            selectedVar.setName(getNameTextField().getText());
-            selectedVar.setQuestion(getRequestTextField().getText());
-            selectedVar.setType(getRadioInfer().isSelected()?
-                    VarType.INFER:(getRadioRequest().isSelected()?VarType.ASK:VarType.INFER_ASK));
-            selectedVar.setDomain(getDomainCombo().getSelectionModel().getSelectedItem());
+            if(variables.contains(var) && !var.equals(selectedVar) ){
+                Main.perror("duplicate variable");
+                return;
+            }
 
+            selectedVar.setName(var.getName());
+            selectedVar.setDomain(var.getDomain());
+            selectedVar.setQuestion(var.getQuestion());
+            selectedVar.setType(var.getType());
 
+            //upd shit
             Main.getController().getVarTabDomValTableView()
                     .setItems(selectedVar.getDomain()==null?null
                             :selectedVar.getDomain().getValues().getList());
-            Main.getController().getReqTextArea()
-                    .setText(selectedVar.getQuestion());
+            Main.getController().getReqTextArea().setText(var.getQuestion());
 
             Main.getController().getVarTableView().getColumns().get(0).setVisible(false);
             Main.getController().getVarTableView().getColumns().get(0).setVisible(true);
+
+            //upd rule table
+            if(Main.getController().getRuleTableView().getItems().size()>0){
+                Main.getController().getRuleTableView().getSelectionModel().clearSelection();
+                Main.getController().getRuleTableView().getSelectionModel().select(0);
+            }
+            Main.getController().getRuleTableView().getColumns().get(0).setVisible(false);
+            Main.getController().getRuleTableView().getColumns().get(0).setVisible(true);
 
             ((Stage)getNameTextField().getScene().getWindow()).close();
         }
@@ -84,17 +102,17 @@ public class VariableController {
     }
 
     private boolean validate() {
-        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9]+(\\s[a-zA-Zа-яА-Я0-9]+)*")) {
+        if (!getNameTextField().getText().matches("[a-zA-Zа-яА-Я0-9/\\.\\-,]+(\\s[a-zA-Zа-яА-Я0-9/\\.\\-,]+)*")
+                || getNameTextField().getText().equalsIgnoreCase("Введите название переменной")) {
             getNameTextField().requestFocus();
             return false;
         }
-        if (getRequestTextField().getText().trim().equals("")) {
-            getRequestTextField().requestFocus();
-            return false;
-        }
-
         if(getDomainCombo().getSelectionModel().isEmpty()) {
             getDomainCombo().show();
+            return false;
+        }
+        if(getDomainCombo().getSelectionModel().getSelectedItem().getValues().getList().size()==0){
+            Main.perror(String.format("Домен %s пуст",getDomainCombo().getSelectionModel().getSelectedItem().getName()));
             return false;
         }
         return true;
@@ -147,5 +165,9 @@ public class VariableController {
 
     public void setDomainCombo(ComboBox<Domain> domainCombo) {
         this.domainCombo = domainCombo;
+    }
+
+    public void onDomPlus(ActionEvent actionEvent) {
+        Main.getController().onAddDomain();
     }
 }

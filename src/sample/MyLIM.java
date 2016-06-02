@@ -1,7 +1,11 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +20,7 @@ public class MyLIM implements Runnable {
     private WMemory memory;
     private KB kb;
     private Variable var;
+    private TreeItem<String> root;
 
     public MyLIM(WMemory memory, KB kb, Variable var) {
         this.memory = memory;
@@ -24,44 +29,52 @@ public class MyLIM implements Runnable {
     }
 
     public void run(){
+        root=new TreeItem<>("root");
+        root.setExpanded(true);
+        Platform.runLater(() -> Main.getController().getTreeView().setRoot(getRoot()));
         try {
-            infer(var,"");
+            infer(var,getRoot());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String res=memory.getFact(var.getName());
-        Main.getController().getTargetTextArea().appendText(res.equals("")
-                ?String.format("Given the information, value of the variable \'%s\' is unknown :(",var.getName())
-                :"Result: "+res);
 
-        Platform.runLater(() -> Main.getController().resetCons());
+        String res=memory.getFact(var.getName());
+
+        Platform.runLater(() -> {
+            Main.getController().getTargetTextArea().appendText(res.equals("")
+                    ?String.format("Не удалось вывести значение переменной: \'%s\'",var.getName())
+                    :"Значение: "+res);
+            Main.getController().resetCons();
+        });
     }
 
     /**
      * Infers a variable
      */
-    public void infer(Variable var, String indent) throws InterruptedException {
+    public void infer(Variable var, TreeItem<String> root) throws InterruptedException {
+        root.setExpanded(false);
         // if type is ask
-        log(String.format("%sTarget variable: \'%s\'\n",indent,var.getName()));
+        root.getChildren().add(treeItemMake(String.format("Цель: \'%s\'",var.getName())));
+
         if (var.getType().equals(VarType.ASK)){
-            log(String.format("%s%s TYPE is 'ASK', asking...\n",indent,var.getName()));
+            root.getChildren().add(treeItemMake(String.format("%s - запрашиваемая, спрашиваю...",var.getName())));
 
             String answer=Main.getController().askVar(var);
             if(answer==null || answer.equals("?")) {
-                log(indent+"Consultation was stopped!\n");
+                root.getChildren().add(treeItemMake("Консультация отменена!"));
                 return;
             }
 
             memory.addFact(var.getName(),answer);
-            log(String.format("%s%s=\'%s\'\n",indent,var.getName(),answer));
+            root.getChildren().add(treeItemMake(String.format("%s = \'%s\'",var.getName(),answer)));
+            Main.getController().appendExplVarTableView(var,new DomainValue(answer));
             return;
         }
 
         // getting list of rules that have our variable in conclusion
-//        log(String.format("\n%sTrying to get list of rules for Var %s",indent,var.getName()));
         ArrayList<Rule> rules = getSortedTargetRules(kb.getRules(),var);
         if (rules.size()==0) {
-            log(String.format("%sNo rules found for the Var \'%s\'\n",indent,var.getName()));
+            root.getChildren().add(treeItemMake(String.format("Для \'%s\' правила не найдены",var.getName())));
             if(var.getType().equals(VarType.INFER))
                 return;
         }
@@ -69,25 +82,28 @@ public class MyLIM implements Runnable {
 
 //        String mess=String.format("\n%sFound rules for Var %s:\n%s",indent,var.getName(),indent);
         if (rules.size()!=0){
-            String mess=String.format("%sRules:\n",indent);
-            mess+=indent+rules.stream().map(Rule::getName).collect(Collectors.joining(String.format("\n%s ",indent)));
-            log(mess+"\n");
-            iterateRules(rules,indent);
+            String mess="Правила:\n";
+            mess+=rules.stream().map(Rule::getName).collect(Collectors.joining("\n"));
+//            root.getChildren().add(treeItemMake(mess));
+            iterateRules(rules,root);
         }
 
         // if type is infer-ask and still no value then ask
         if (var.getType().equals(VarType.INFER_ASK) && memory.getFact(var.getName()).equalsIgnoreCase("")){
-            log(String.format("%sCould not infer variable \'%s\', asking...\n",indent,var.getName()));
+            root.getChildren().add(treeItemMake(
+                    String.format("Не удалось вывести \'%s\', спрашиваю...",var.getName())));
             String answer=Main.getController().askVar(var);
             if(answer==null || answer.equals("?")) {
-                log(indent+"Consultation is stopped!\n");
+                root.getChildren().add(treeItemMake("Консультация отменена!"));
                 return;
             }
             memory.addFact(var.getName(),answer);
-            log(String.format("%s%s=\'%s\'\n",indent,var.getName(),answer));        }
+//            root.getChildren().add(treeItemMake(String.format("%s = \'%s\'",var.getName(),answer)));
+            Main.getController().appendExplVarTableView(var,new DomainValue(answer));
+        }
     }
 
-    private void iterateRules(ArrayList<Rule> rules, String indent) throws InterruptedException {
+    private void iterateRules(ArrayList<Rule> rules, TreeItem<String> root) throws InterruptedException {
         if(rules.size()==0) return;
         int i=0;
         Variable targetVar=rules.get(0).getConclusion().getVarval().getVariable();
@@ -95,47 +111,67 @@ public class MyLIM implements Runnable {
 
         while (i<rules.size() && memory.getFact(varname).equalsIgnoreCase("")){
 
-            test(rules.get(i),indent);
+            test(rules.get(i),root);
             i++;
         }
     }
 
 
-    private void test(Rule rule, String indent) throws InterruptedException {
-        log(String.format("%sTrying rule \'%s\':\n%s%s\n",indent,rule.getName(),indent,rule.getRuleView(indent)));
+    private void test(Rule rule, TreeItem<String> root) throws InterruptedException {
+        TreeItem<String> newroot=treeItemMake(String.format("Правило \'%s\'",rule.getName()));
+        root.getChildren().add(newroot);
         Premises premises = rule.getPremises();
         for(VarVal p:premises){
             // if variable was found in another rule
             if (memory.getFact(p.varname()).equalsIgnoreCase(p.varvalue())) {
-                log(String.format("%s Variable \'%s\' was assigned previously\n",indent,p.varname()));
+                root.getChildren().add(treeItemMake(
+                        String.format("Переменная \'%s\' выведена ранее",p.varname())));
                 continue;
             }
             // if it has wrong value then this rule is broken
             if (!memory.getFact(p.varname()).equalsIgnoreCase("")) {
                 String val=memory.getFact(p.varname()).equals("")?"?":memory.getFact(p.varname());
-                log(String.format("%s Variable %s=\'%s\', expected:\'%s\' the rule is broken\n",
-                        indent,p.varname(),val,p.varvalue()));
+                root.getChildren().add(treeItemMake(
+                        String.format("%s = \'%s\' != \'%s\' правило НЕ сработало",
+                                p.varname(),val,p.varvalue())));
+//                root.getChildren().add(treeItemMake(
+//                        String.format("Пояснение: %s",rule.getReasoning())));
+
                 return;
             }
             // the variable is not initialized
-            infer(p.getVariable(), indent+"\t");
+            newroot.setExpanded(true);
+            infer(p.getVariable(), newroot);
             // if it has wrong value then this rule is broken
             if (!memory.getFact(p.varname()).equalsIgnoreCase(p.varvalue())) {
                 String val=memory.getFact(p.varname()).equals("")?"?":memory.getFact(p.varname());
-                log(String.format("%s Variable %s=\'%s\', expected:\'%s\' the rule is broken\n",
-                        indent,p.varname(),val,p.varvalue()));
+//                root.getChildren().add(treeItemMake(
+//                        String.format("%s = \'%s\' != \'%s\' правило НЕ сработало",
+//                        p.varname(),val,p.varvalue())));
+//                root.getChildren().add(treeItemMake(
+//                        String.format("Пояснение: %s",rule.getReasoning())));
+
+
+                root.getChildren().remove(newroot);
                 return;
             }
         }
         VarVal varval =rule.getConclusion().getVarval();
         memory.addFact(varval.varname(),varval.varvalue());
-        log(String.format("%s Rule \'%s\' fired\n",indent,rule.getName()));
+        Main.getController().appendExplVarTableView(varval.getVariable(),varval.getDomainValue());
+
+        root.getChildren().add(treeItemMake(
+                String.format("Правило сработало")));
+//        root.getChildren().add(treeItemMake(String.format("%s = \'%s\'",varval.varname(),varval.varvalue())));
+
+//        root.getChildren().add(treeItemMake(
+//                String.format("Пояснение: %s",rule.getReasoning())));
     }
 
     private ArrayList<Rule> getSortedTargetRules(Rules rules, Variable var){
         List<Rule> list=rules.getList().stream()
                 .filter(x->x.getConclusion().getVarval().varname().equals(var.getName()))
-                .sorted((x1,x2)->x1.getPremises().getList().size()-x2.getPremises().getList().size())
+//                .sorted((x1,x2)->x1.getPremises().getList().size()-x2.getPremises().getList().size())
                 .collect(Collectors.toList());
         return new ArrayList<>(list);
     }
@@ -149,10 +185,11 @@ public class MyLIM implements Runnable {
     }
 
 
-    private void log(String m){
-        Platform.runLater(() -> {
-            Main.getController().getConsTabLogTextArea().appendText(m);
-        });
+    public TreeItem<String> getRoot() {
+        return root;
     }
 
+    private TreeItem<String> treeItemMake(String msg){
+        return new TreeItem<>(msg);
+    }
 }

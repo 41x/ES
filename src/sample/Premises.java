@@ -25,7 +25,13 @@ public class Premises implements Serializable,Iterable<VarVal> {
     public boolean add(String variable, String value) {
         Variable v = variables.find(variable);
         DomainValue dv = v.getDomain().getValues().find(value);
-        return !(v == null || dv == null) && list.add(new VarVal(v, dv));
+        VarVal vv=new VarVal(v, dv);
+        if(list.stream().filter(x->x.equals(vv)).count()>0){
+            Main.perror("such pair of var and value already exists in the premise ");
+            return false;
+        }
+
+        return v != null && dv != null && list.add(vv);
     }
 
     public void setVariables(Variables variables) {
@@ -67,5 +73,14 @@ public class Premises implements Serializable,Iterable<VarVal> {
 
     public void setList(ObservableList<VarVal> list) {
         this.list = list;
+    }
+
+    private boolean contains(VarVal vv){
+        return list.stream().filter(x->x.equals(vv)).count()>0;
+    }
+
+    public boolean equals(Premises obj) {
+        boolean res=list.size()==obj.getList().size() && list.stream().filter(x->obj.contains(x)).count()==list.size();
+        return res;
     }
 }

@@ -34,4 +34,9 @@ public class VarVal implements Serializable {
     public VarVal clone(){
         return new VarVal(getVariable(),getDomainValue());
     }
+
+    public boolean equals(VarVal obj) {
+        boolean res= variable.equals(obj.getVariable()) && domainValue.equals(obj.getDomainValue());
+        return res;
+    }
 }
